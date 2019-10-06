@@ -109,7 +109,9 @@ y_po3 = x[:,1]
 px_po3 = x[:,2]
 py_po3 = x[:,3]
 
-#%%
+#%% Calculate reaction flux 
+"""Calculate reaction flux
+"""
 q1=0
 q2=0
 q3=0
@@ -119,6 +121,33 @@ for i in range(len(px_po2)-1):
     q2 = q2+ 0.5*(t2[i+1]-t2[i])*(py_po2[i+1]**2+py_po2[i]**2) + 0.5*(t2[i+1]-t2[i])*(px_po2[i+1]**2+px_po2[i]**2)
 for i in range(len(px_po3)-1):
     q3 = q3+ 0.5*(t3[i+1]-t3[i])*(py_po3[i+1]**2+py_po3[i]**2) + 0.5*(t3[i+1]-t3[i])*(px_po3[i+1]**2+px_po3[i]**2)
-    
+
+Q = np.array([q1,q2,q3])    
 print("flux is (%s,%s,%s)" % (q1,q2,q3))
-    
+
+#%% Plot reaction flux as a function of Depth, Flatness
+
+def depth(alpha,mu,omega,epsilon):
+    depth = -(2*math.sqrt(mu)- (omega**2*epsilon)/(omega**2+epsilon))**3/(6*alpha**2)
+    return depth
+
+
+epsilon = np.array([0,0.05,0.1,0.2])
+alpha = np.array([0.5,1,2])   
+D = np.zeros((3,4))
+for i in range(len(alpha)):
+    for j in range(len(epsilon)):
+        D[i,j] = depth(alpha[i],mu,omega,epsilon[j])
+ax = plt.gca()
+plot1 = ax.plot(alpha[0:],Q,label=r'$\mathcal{F},\epsilon=0$')
+plot2 = ax.plot(D[:,1],Q,label=r'$\mathcal{F},\epsilon=0$')
+
+
+legend = ax.legend(loc='best')
+ax.set_xlabel(r'$\alpha$', fontsize=axis_fs)
+ax.set_ylabel(r'$\mathcal{Q}$', fontsize=axis_fs)
+ax.set_xlim(-1, 2)
+ax.set_ylim(1, 1.5)
+
+plt.grid()
+plt.show()

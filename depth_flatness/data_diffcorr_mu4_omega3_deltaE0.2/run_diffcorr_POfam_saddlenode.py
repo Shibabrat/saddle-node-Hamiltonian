@@ -252,8 +252,8 @@ MASS_B=1.0
 EPSILON_S=0.0
 alpha=0.5
 #mu=alpha**(3/4)
-mu=0.1
-omega=1.0
+mu=4
+omega=3
 epsilon=0.001
 
 parameters = np.array([MASS_A, MASS_B, EPSILON_S, alpha, mu, epsilon, omega])
@@ -286,11 +286,11 @@ t = time.time()
 num_alpha = 10
 num_ep = 4
 alpha = np.zeros((num_alpha,num_ep))
-alpha[:,0] = np.linspace(0.1,5,num_alpha)
-alpha[:,1] = np.linspace(0.03,1,num_alpha)
-alpha[:,2] = np.linspace(0.01,0.5,num_alpha)
-alpha[:,3] = np.linspace(0.001,0.1,num_alpha)
-epsilon = np.array([1e-20,0.5,1.0,1.5])
+alpha[:,0] = np.linspace(3,10,num_alpha)
+alpha[:,1] = np.linspace(3,10,num_alpha)
+alpha[:,2] = np.linspace(3,10,num_alpha)
+alpha[:,3] = np.linspace(3,10,num_alpha)
+epsilon = np.array([1e-20,1.5,3.0,4.5])
 for i in range(4):
     for j in range(10):
         al = alpha[j,i]

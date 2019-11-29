@@ -58,13 +58,43 @@ axis_fs=15
 
 # Definition of the PES
 def V(alpha,mu,x):
+    """
+    Potential energy function for the 1 dimensional saddle-node 
+    Hamiltonian
+
+    Parameters
+    ----------
+    alpha: float
+    Parameter of the potential energy function
+
+    mu: float
+    Parameter of the potential energy function (must be > 0)
+
+    x: float
+    Position coordinate of the system
+
+    Returns
+    -------
+    pot: float
+    Potential energy value at the input position coordinate
+    """
+
     pot = (1/3)*alpha*x**3 - math.sqrt(mu)*x**2
     return pot
 
-# Definition of the PES
-# def V(alpha,mu,x):
-#     pot = (1/3)*alpha*x**3 - math.sqrt(mu)*x**2
-#     return pot
+# Depth definition
+# def depth_sn1dof(alpha, mu):
+
+#     # Get the saddle equilibrium point
+#     x_saddle = 
+
+#     # Get the center equilibrium point
+#     x_center = 
+
+
+#     depth = V(alpha, mu, x_saddle) - V(alpha, mu, x_center)
+
+#     return depth
 
 
 x = np.linspace(-5, 10, 1000)

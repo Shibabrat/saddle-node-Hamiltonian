@@ -67,33 +67,14 @@ def V(alpha,mu,x):
 #     return pot
 
 
-# Definition of the 2 DoF PES
-def V_SN2dof(x,y,par):
-    pot = (1/3)*par[3]*x**3 - math.sqrt(par[4])*x**2 + \
-        0.5*par[6]*y**2+0.5*par[5]*(x-y)**2
-    return pot
-    
-
-def get_pot_surf_proj(xVec, yVec,par):            
-
-    resX = np.size(xVec)
-    resY = np.size(xVec)
-    surfProj = np.zeros([resX, resY])
-    for i in range(len(xVec)):
-        for j in range(len(yVec)):
-            surfProj[i,j] = V_SN2dof(xVec[j], yVec[i],par)
-
-    return surfProj
-
-
 x = np.linspace(-5, 10, 1000)
 
 #% plot of 1 DoF PES with alpha and mu, keep alpha as a constant
 fig = plt.figure()
 ax = plt.gca()
 
-plot1 = ax.plot(x,V(1,0.1,x), linewidth = lw, \
-                label=r'$\alpha=1,\mu=0.1$')
+plot1 = ax.plot(x,V(1,0.5,x), linewidth = lw, \
+                label=r'$\alpha=1,\mu=0.5$')
 
 # plot2 = ax.plot(x,V(1,0.5,x),label=r'$\alpha=1,\mu=0.5$')
  
@@ -110,7 +91,7 @@ ax.set_ylabel(r'$V(x)$', fontsize=fal)
 legend = ax.legend(loc='best', fontsize = ftl)
 
 ax.set_xlim(-5, 15)
-ax.set_ylim(-5, 5)
+ax.set_ylim(-10, 5)
 plt.grid()
 plt.draw()
 plt.pause(0.01)
@@ -123,8 +104,8 @@ ax = plt.gca()
 # plot1 = ax.plot(x,V(0.5,1,x), linewidth = 1.0, \
                 # label=r'$\alpha=0.5,\mu=1$')
 
-plot2 = ax.plot(x,V(1.0,1,x), linewidth = lw, \
-                label=r'$\alpha=1.0,\mu=1$')
+plot2 = ax.plot(x,V(0.5,1.0,x), linewidth = lw, \
+                label=r'$\alpha=0.5,\mu=1$')
  
 # plot3 = ax.plot(x,V(1.5,1.0,x),label=r'$\alpha=1.5,\mu=1$')
 
@@ -138,11 +119,13 @@ ax.set_ylabel('$V(x)$', fontsize=fal)
 
 legend = ax.legend(loc='best', fontsize = ftl)
 
-ax.set_xlim(-5, 7)
+ax.set_xlim(-5, 10)
 ax.set_ylim(-10, 5)
+
 plt.grid()
 plt.draw()
 # plt.pause(0.01)
+plt.savefig('temp.pdf', bbox_inches = 'tight')
 plt.show() #block = False
 
 

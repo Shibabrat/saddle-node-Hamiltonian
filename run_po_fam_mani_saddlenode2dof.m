@@ -16,9 +16,15 @@ N = 4;          % dimension of phase space
 MASS_A = 1.0; MASS_B = 1.0; % Mass-weighted momenta
 
 MU = 0.1;
-ALPHA = 2.0;
+ALPHA = 0.05;
 OMEGA = 1.0;
-EPSILON = 1e-20;
+EPSILON = 1.5;
+
+
+% MU = 0.1;
+% ALPHA = 2.0;
+% OMEGA = 1.0;
+% EPSILON = 1e-20;
 % % EPSILON = 0.1;
 % EPSILON = 0.125;
 % 
@@ -76,7 +82,7 @@ x0podata = [po_x0Fam, po_tpFam];
 % initial condition with target energy 
 % fileName = 'x0po_T_energy_case1_L41.txt';
 % fileName = 'x0po_T.txt';
-deltaE = 0.05;
+deltaE = 0.2;
 
 po_fam_file = ['x0_tp_fam_eqPt',num2str(eqNum),'_saddlenode2dof.txt'];
 eTarget = eSaddle + deltaE; 

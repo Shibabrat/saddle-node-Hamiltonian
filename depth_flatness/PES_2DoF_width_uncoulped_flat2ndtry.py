@@ -39,20 +39,6 @@ epsilon=0.0
 axis_fs=20
 e=0.01
 parameters = np.array([MASS_A, MASS_B, EPSILON_S, alpha, mu, epsilon, omega])
-#eqNum = 1;  
-#eqPt = saddlenode_tpcd.get_eq_pts_saddlenode(eqNum, parameters)
-
-#depth = -(2*math.sqrt(parameters[4])- (parameters[6]**2*parameters[5])/(parameters[6]**2+parameters[5]))**3/(6*parameters[3]**2)
-
-def dVdx(x,y,alpha,mu,epsilon):
-    dVdx = alpha*x**2+ (epsilon-2*np.sqrt(mu))*x - epsilon*y
-    return dVdx
-
-def V_2dof(x,y,alpha,mu,omega,epsilon,V):
-#    f = (alpha/3)*x**3 +(0.5*epsilon-np.sqrt(mu))*x**2-epsilon*y*x +0.5*(omega**2+epsilon)*y**2-V
-    f = (alpha/3)*x**3 -np.sqrt(mu)*x**2 +0.5*epsilon*x**2-V
-    return f
-
 
 #%% definition of flatness (2nd version, i.e. mean of norm(dVdx) over some domain \Omega)
 #%% 2dof flatness calculation
@@ -128,10 +114,6 @@ plt.close('all')
 #widratio = lambda alpha: math.sqrt(e/(e+(2*math.sqrt(mu)- (omega**2*epsilon)/(omega**2+epsilon))**3/(6*alpha**2)))
 alpha = np.linspace(0,10,num_alp)
 epsilon = 0
-def saddle_pt(alpha,mu,omega,epsilon):
-    xe = 2*math.sqrt(parameters[4])/parameters[3] - (parameters[6]**2*parameters[5])/(parameters[3]*(parameters[6]**2+parameters[5]))
-    ye = xe*parameters[5]/(parameters[6]**2+parameters[5])
-    return xe,ye
 
 def widthratio(alpha,mu,omega,epsilon,e):
     ratio = np.sqrt(e/(e+(2*math.sqrt(mu)- (omega**2*epsilon)/(omega**2+epsilon))**3/(6*alpha**2)))

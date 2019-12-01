@@ -118,15 +118,15 @@ def widthratio(alpha,mu,e):
 
 ax = plt.gca()
 e= 0.005
-plot1 = ax.plot(F[:],widthratio(alpha,mu,e),label=r'$R_{bw}$ for the 1 dof system, $\mu=4,e=0.005$') 
+plot1 = ax.plot(abs(F[:]),widthratio(alpha,mu,e),label=r'$R_{bw}$ for the 1 dof system, $\mu=4,e=0.005$') 
 e= 0.01
-plot2 = ax.plot(F[:],widthratio(alpha,mu,e),label=r'$R_{bw}$ for the 1 dof system, $\mu=4,e=0.01$') 
+plot2 = ax.plot(abs(F[:]),widthratio(alpha,mu,e),label=r'$R_{bw}$ for the 1 dof system, $\mu=4,e=0.01$') 
 e= 0.05
-plot3 = ax.plot(F[:],widthratio(alpha,mu,e),label=r'$R_{bw}$ for the 1 dof system, $\mu=4,e=0.05$') 
+plot3 = ax.plot(abs(F[:]),widthratio(alpha,mu,e),label=r'$R_{bw}$ for the 1 dof system, $\mu=4,e=0.05$') 
 e= 0.1
-plot4 = ax.plot(F[:],widthratio(alpha,mu,e),label=r'$R_{bw}$ for the 1 dof system, $\mu=4,e=0.1$') 
+plot4 = ax.plot(abs(F[:]),widthratio(alpha,mu,e),label=r'$R_{bw}$ for the 1 dof system, $\mu=4,e=0.1$') 
 e=0.5
-plot6 = ax.plot(F[:],widthratio(alpha,mu,e),label=r'$R_{bw}$ for the 1 dof system, $\mu=4,e=0.5$') 
+plot6 = ax.plot(abs(F[:]),widthratio(alpha,mu,e),label=r'$R_{bw}$ for the 1 dof system, $\mu=4,e=0.5$') 
 
 
 ax.set_xlabel(r'$\mathcal{F}$', fontsize=axis_fs)

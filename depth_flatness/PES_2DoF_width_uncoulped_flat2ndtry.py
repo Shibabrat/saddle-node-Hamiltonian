@@ -55,10 +55,6 @@ def grad_pot_saddlenode(x, par):
 
 x = np.linspace(-1,10,500)
 y = np.linspace(-5,5,500)
-normF = np.zeros((500,500))
-for i in range(500):
-    for j in range(500):
-        normF[i,j] = grad_pot_saddlenode([x[i],y[j]], parameters)
 
 num_alp=100 # number of alphas we want to calculate
 F = np.zeros((num_alp,8))

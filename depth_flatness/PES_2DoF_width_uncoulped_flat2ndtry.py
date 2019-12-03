@@ -106,26 +106,26 @@ plt.show()
 
 #%% flatness aginist widthratio plottings
 plt.close('all')
-# ratio of width of the bottleneck/width of the well
-#widratio = lambda alpha: math.sqrt(e/(e+(2*math.sqrt(mu)- (omega**2*epsilon)/(omega**2+epsilon))**3/(6*alpha**2)))
 alpha = np.linspace(0,10,num_alp)
 epsilon = 0
 
 def widthratio(alpha,mu,omega,epsilon,e):
+    """This function returns Rbw which is the ratio of width of the bottleneck/width of the well
+    """ 
     ratio = np.sqrt(e/(e+(2*math.sqrt(mu)- (omega**2*epsilon)/(omega**2+epsilon))**3/(6*alpha**2)))
     return ratio
 
 ax = plt.gca()
 e= 0.005
-plot1 = ax.plot(F[:,0],widthratio(alpha,mu,omega,epsilon,e),label=r'width ratio of the uncoupled system, $\mu=4,\omega=3,e=0.005$') # plot width ratio as a function of alpha
+plot1 = ax.plot(F[:,0],widthratio(alpha,mu,omega,epsilon,e),label=r'Rbw of the uncoupled system, $\mu=4,\omega=3,e=0.005$') # plot width ratio as a function of alpha
 e= 0.01
-plot2 = ax.plot(F[:,0],widthratio(alpha,mu,omega,epsilon,e),label=r'width ratio of the uncoupled system, $\mu=4,\omega=3,e=0.01$') # plot width ratio as a function of alpha
+plot2 = ax.plot(F[:,0],widthratio(alpha,mu,omega,epsilon,e),label=r'Rbw of the uncoupled system, $\mu=4,\omega=3,e=0.01$') # plot width ratio as a function of alpha
 e= 0.05
-plot3 = ax.plot(F[:,0],widthratio(alpha,mu,omega,epsilon,e),label=r'width ratio of the uncoupled system, $\mu=4,\omega=3,e=0.05$') # plot width ratio as a function of alpha
+plot3 = ax.plot(F[:,0],widthratio(alpha,mu,omega,epsilon,e),label=r'Rbw of the uncoupled system, $\mu=4,\omega=3,e=0.05$') # plot width ratio as a function of alpha
 e= 0.1
-plot4 = ax.plot(F[:,0],widthratio(alpha,mu,omega,epsilon,e),label=r'width ratio of the uncoupled system, $\mu=4,\omega=3,e=0.1$') # plot width ratio as a function of alpha
+plot4 = ax.plot(F[:,0],widthratio(alpha,mu,omega,epsilon,e),label=r'Rbw of the uncoupled system, $\mu=4,\omega=3,e=0.1$') # plot width ratio as a function of alpha
 e=0.5
-plot6 = ax.plot(F[:,0],widthratio(alpha,mu,omega,epsilon,e),label=r'width ratio of the uncoupled system, $\mu=4,\omega=3,e=0.5$') # plot width ratio as a function of alpha
+plot6 = ax.plot(F[:,0],widthratio(alpha,mu,omega,epsilon,e),label=r'Rbw of the uncoupled system, $\mu=4,\omega=3,e=0.5$') # plot width ratio as a function of alpha
 
 
 ax.set_xlabel(r'$\mathcal{F}$', fontsize=axis_fs)

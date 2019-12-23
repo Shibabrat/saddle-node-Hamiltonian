@@ -36,34 +36,30 @@ mu=0.1
 omega=1.0
 epsilon=0
 axis_fs=20
-#parameters = np.array([MASS_A, MASS_B, EPSILON_S, alpha, mu, epsilon, omega]);
-#eqNum = 1;  
-#eqPt = saddlenode_tpcd.get_eq_pts_saddlenode(eqNum, parameters)
 
-#depth = -(2*math.sqrt(parameters[4])- (parameters[6]**2*parameters[5])/(parameters[6]**2+parameters[5]))**3/(6*parameters[3]**2)
 #%%
 def depth(alpha,mu,omega,epsilon):
     depth = -(2*math.sqrt(mu)- (omega**2*epsilon)/(omega**2+epsilon))**3/(6*alpha**2)
     return depth
 #%% definition of flatness(1st attempt)
-alpha = np.linspace(1.e-5, 5, 1000)
-
-def flatness(mu,omega):
-    flatness = math.sqrt((7/4)**2*mu+ omega**4) 
-    return flatness
-ax = plt.gca()
-plot1 = ax.plot(alpha,depth(alpha,mu,omega,epsilon),label=r'$\mathcal{D}, \mu=0.1,\omega=1$') # plot depth as a function of alpha
-plot2 = ax.plot(alpha,np.ones(1000)*flatness(mu,omega),label=r'$\mathcal{F}, \mu=0.1,\omega=1$') # plot depth as a function of alpha
-
-
-ax.set_xlabel(r'$\alpha$', fontsize=axis_fs)
-ax.set_ylabel(r'$\mathcal{F},\mathcal{D}$', fontsize=axis_fs)
-
-legend = ax.legend(loc='best')
-ax.set_xlim(0, 2)
-ax.set_ylim(-4, 2)
-plt.grid()
-plt.show()
+#alpha = np.linspace(1.e-5, 5, 1000)
+#
+#def flatness(mu,omega):
+#    flatness = math.sqrt((7/4)**2*mu+ omega**4) 
+#    return flatness
+#ax = plt.gca()
+#plot1 = ax.plot(alpha,depth(alpha,mu,omega,epsilon),label=r'$\mathcal{D}, \mu=0.1,\omega=1$') # plot depth as a function of alpha
+#plot2 = ax.plot(alpha,np.ones(1000)*flatness(mu,omega),label=r'$\mathcal{F}, \mu=0.1,\omega=1$') # plot depth as a function of alpha
+#
+#
+#ax.set_xlabel(r'$\alpha$', fontsize=axis_fs)
+#ax.set_ylabel(r'$\mathcal{F},\mathcal{D}$', fontsize=axis_fs)
+#
+#legend = ax.legend(loc='best')
+#ax.set_xlim(0, 2)
+#ax.set_ylim(-4, 2)
+#plt.grid()
+#plt.show()
 
 #%%
 plt.close('all')

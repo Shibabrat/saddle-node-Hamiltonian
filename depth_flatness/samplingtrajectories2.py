@@ -35,8 +35,8 @@ MASS_B=1.0
 EPSILON_S=0.0
 alpha=1.0
 #mu=alpha**(3/4)
-mu = 0.1
-omega=1.0
+mu = 4
+omega=3.0
 epsilon=0.0
 
 parameters = np.array([MASS_A, MASS_B, EPSILON_S, alpha, mu, epsilon, omega]);
@@ -74,6 +74,13 @@ def reaction_event(t,x,par):
     direction = 0; #0: all directions of crossing
     return x[0]
 
+reaction_event.terminal = True 
+
+# The zero can be approached from either direction
+
+reaction_event.direction=0#0: all directions of crossing
+
+
 def get_pot_surf_proj(xVec, yVec,par):            
 
     resX = np.size(xVec)
@@ -98,7 +105,7 @@ def deter_py(x,y,px,e,par):
     py = np.sqrt(e-V_SN2dof(x,y,par)-0.5*px**2)
     return py
 
-#%% defines function for calculating reaction probability, sampling points in the configuration space
+#%% defines function for calculating reaction probability, procedure for sampling points in the configuration space
 def reaction_probability(x,y,e,par,num_sim):
     """
     This function records the time when the trajectory reaches the DS(x=0) 
@@ -110,6 +117,9 @@ def reaction_probability(x,y,e,par,num_sim):
         e: total energy of the system
         par: parameter values
         num_sim: number of simulation we want to perform for given values of x, y.
+    Returns:
+        te1: time when the trajecotry reaches the DS(x=0),
+             empty if the trajecotory does not reach the DS(x=0).
     """
     TSPAN = [0,40]
     RelTol = 3.e-10
@@ -164,8 +174,8 @@ def sampling_configuration(x_min,x_max,y_min,y_max,num_pts,par,e):
                 num_accept_pts = num_accept_pts+1
                 accept_pts[num_accept_pts,:] = [x[i],y[j]]
     return accept_pts[:num_accept_pts,:]
-#%%
-num_sim=100 # The expected time to run the simulation for 3 different alphas, when num_sim=100 is approx 100 min.
+#%% old version
+num_sim=100 # The expected time to run the simulation for 3 different alphas, num_sim=100 takes approx 100 min.
 e=0.5
 alpha1=1
 alpha2=2
@@ -174,7 +184,7 @@ epsilon= 0.0
 parameters=np.array([MASS_A, MASS_B, EPSILON_S, alpha1, mu, epsilon, omega])
 
 DS = np.linspace(-np.sqrt(2*e/(omega**2+epsilon)),np.sqrt(2*e/(omega**2+epsilon)),12)
-num_pts=10 #num_pts is the number of points we want to sample in one direction on the configuration space.
+num_pts=10 #num_pts is the number of points we want to sample in each x,y directions on the configuration space.
 chosen_pts = np.zeros((num_pts,num_pts))
 # Record the choice of initial conditions on the configuration space.
 for i in range(10):
@@ -192,7 +202,7 @@ for i in range(10):
         event_times = np.concatenate((event_times,event_t),axis=0, out=None)
 np.savetxt(react_time_file.name,event_times,fmt='%1.16e')
 react_time_file.close()
-        
+       
 parameters=np.array([MASS_A, MASS_B, EPSILON_S, alpha2, mu, epsilon, omega])
 
 DS = np.linspace(-np.sqrt(2*e/(omega**2+epsilon)),np.sqrt(2*e/(omega**2+epsilon)),12)
@@ -234,7 +244,47 @@ for i in range(10):
 np.savetxt(react_time_file.name,event_times,fmt='%1.16e')
 react_time_file.close()
 
-#%%
+#%% updated version
+num_sim=100 # The expected time to run the simulation for 3 different alphas, when num_sim=100 is approx 100 min.
+e=0.5
+alpha1=1
+alpha2=2
+alpha3=5
+epsilon= 0.0
+parameters=np.array([MASS_A, MASS_B, EPSILON_S, alpha1, mu, epsilon, omega])
+
+sampling_pts = sampling_configuration(0,6,-3,3,14,parameters,0.5)
+num_chosen_pts = len(sampling_pts)
+with open("e=%s_par=%s_numsim=%s.txt" %(e,parameters[3:],num_sim),'a+') as react_time_file:
+    event_times = np.zeros((num_sim,1))
+    for i in range(num_chosen_pts):
+        print(i)
+        event_t = reaction_probability(sampling_pts[i,0],sampling_pts[i,1],e,parameters,num_sim)
+        event_times = np.concatenate((event_times,event_t),axis=0, out=None)
+    np.savetxt(react_time_file.name,event_times,fmt='%1.16e')
+
+parameters=np.array([MASS_A, MASS_B, EPSILON_S, alpha2, mu, epsilon, omega])
+sampling_pts = sampling_configuration(0,6,-3,3,14,parameters,0.5)
+num_chosen_pts = len(sampling_pts)
+with open("e=%s_par=%s_numsim=%s.txt" %(e,parameters[3:],num_sim),'a+') as react_time_file:
+    event_times = np.zeros((num_sim,1))
+    for i in range(num_chosen_pts):
+        print(i)
+        event_t = reaction_probability(sampling_pts[i,0],sampling_pts[i,1],e,parameters,num_sim)
+        event_times = np.concatenate((event_times,event_t),axis=0, out=None)
+    np.savetxt(react_time_file.name,event_times,fmt='%1.16e')
+
+parameters=np.array([MASS_A, MASS_B, EPSILON_S, alpha3, mu, epsilon, omega])
+sampling_pts = sampling_configuration(0,6,-3,3,14,parameters,0.5)
+num_chosen_pts = len(sampling_pts)
+with open("e=%s_par=%s_numsim=%s.txt" %(e,parameters[3:],num_sim),'a+') as react_time_file:
+    event_times = np.zeros((num_sim,1))
+    for i in range(num_chosen_pts):
+        print(i)
+        event_t = reaction_probability(sampling_pts[i,0],sampling_pts[i,1],e,parameters,num_sim)
+        event_times = np.concatenate((event_times,event_t),axis=0, out=None)
+    np.savetxt(react_time_file.name,event_times,fmt='%1.16e')
+#%% old version
 num_sim=100
 x=-0.1
 y=0.5
@@ -259,6 +309,36 @@ react_time_file.close()
 
 parameters=np.array([MASS_A, MASS_B, EPSILON_S, alpha3, mu, epsilon, omega])
 react_time_file = open("numpts=%s_e=%s_par=%s_numsim=%s.txt" %(num_pts,e,parameters[3:],num_sim),'a+')
+print('Loading the reaction time from data file',react_time_file.name,'\n') 
+event_t3 = np.loadtxt(react_time_file.name)
+event_t3 = event_t3[num_sim:]
+react_time_file.close()
+
+#%% updated version
+num_sim=100
+x=-0.1
+y=0.5
+e=0.5
+alpha1=1
+alpha2=2
+alpha3=5
+epsilon= 0.0
+parameters=np.array([MASS_A, MASS_B, EPSILON_S, alpha1, mu, epsilon, omega])
+react_time_file = open("e=%s_par=%s_numsim=%s.txt" %(e,parameters[3:],num_sim),'a+')
+print('Loading the reaction time from data file',react_time_file.name,'\n') 
+event_t1 = np.loadtxt(react_time_file.name)
+event_t1 = event_t1[num_sim:]
+react_time_file.close()
+
+parameters=np.array([MASS_A, MASS_B, EPSILON_S, alpha2, mu, epsilon, omega])
+react_time_file = open("e=%s_par=%s_numsim=%s.txt" %(e,parameters[3:],num_sim),'a+')
+print('Loading the reaction time from data file',react_time_file.name,'\n') 
+event_t2 = np.loadtxt(react_time_file.name)
+event_t2 = event_t2[num_sim:]
+react_time_file.close()
+
+parameters=np.array([MASS_A, MASS_B, EPSILON_S, alpha3, mu, epsilon, omega])
+react_time_file = open("e=%s_par=%s_numsim=%s.txt" %(e,parameters[3:],num_sim),'a+')
 print('Loading the reaction time from data file',react_time_file.name,'\n') 
 event_t3 = np.loadtxt(react_time_file.name)
 event_t3 = event_t3[num_sim:]
@@ -370,7 +450,7 @@ ax.plot(coordinates[0,:],coordinates[1,:])
 def equ_pos(par):
     """Returns the position of the centre equilibrium point
     """
-    xe = 2*math.sqrt(par[4])/par[3] - (par[6]**2*par[5])/(par[3]*(par[6]**2+par[5]))
+    xe = 2*np.sqrt(par[4])/par[3] - (par[6]**2*par[5])/(par[3]*(par[6]**2+par[5]))
     ye = xe*par[5]/(par[6]**2+par[5])
     return xe, ye
 

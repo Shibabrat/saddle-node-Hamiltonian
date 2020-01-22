@@ -173,41 +173,77 @@ def sampling_phase(num_pts,par,e):
     return accept_pts
 
 #%% depth and flatness
-def depth(alpha,mu):
+def depth_1dof_sn(par):
     """ This function returns the value of depth for a given set of parameters
     """
-    depth = -4*(math.sqrt(mu))**3/(3*alpha**2)
+    depth = -4*(math.sqrt(par[4]))**3/(3*par[3]**2)
     return depth
 
-D = [depth(1,mu),depth(2,mu),depth(5,mu)]
-def grad_pot_saddlenode(x, par):
-    """This function returns the gradient of the potential energy function V(x,y)
-    """     
-
-    dVdx = par[3]*x**2-2*np.sqrt(par[4])*x
+def flatness_1dof_sn(x_min,x_max,num_pts,par):
+    """Returns the value of flatness for a given domain [x_min,x_max] where we discretise this domain
     
-    return abs(dVdx)
-
-x = np.linspace(-1,10,500)
-normF = np.zeros((500))
-for i in range(500):
-    normF[i] = grad_pot_saddlenode(x[i], parameters)
+       with num_pts number of points. definition of flatness is defined as the mean(norm) of nonnan values
+       
+       of dV/dx over some domain in x coordinates.
+       
+       
+        Parameters
+    
+        ----------
+    
+        x_min : float
+    
+            = min value of the boundary of the domain we want to define our flatness on 
+    
+        x_max : float
+    
+            = max value of the boundary of the domain we want to define our flatness on 
+            
+        num_pts : int
+            
+            = number of points we want to discretise our domain with this number
+              
+              of points
+    
+        parameters : float (list)
+    
+            model parameters
+    
+    
+    
+        Returns
+    
+        -------
+    
+        F : float
+    
+            value of flatness over this particular domain with model parameters
+        
+    """
+    def grad_pot_saddlenode(x, par):
+        """This function returns the gradient of the potential energy function V(x,y)
+        """     
+    
+        dVdx = par[3]*x**2-2*np.sqrt(par[4])*x
+        
+        return abs(dVdx)
+    x = np.linspace(x_min,x_max,num_pts)
+    normF = np.zeros((num_pts))
+    for i in range(num_pts):
+        normF[i] = grad_pot_saddlenode(x[i],par)
+    F = np.nanmean(normF)
+    return F
 
 num_alp=3 # number of alphas we want to calculate
-F = np.zeros(num_alp)
 alpha = np.array([1,2,5])
-for i in range(len(alpha)):
+D = depth_1dof_sn([MASS_A, MASS_B, EPSILON_S,alpha,mu])
+F = np.zeros(num_alp)
+for i in range(num_alp):
     parameters = np.array([MASS_A, MASS_B, EPSILON_S, alpha[i], mu])
-    normF = np.zeros((500))
-    for k1 in range(500):
-        normF[k1] = grad_pot_saddlenode(x[k1], parameters)
-            
-    F[i] = np.nanmean(normF)
-    # We can calculate flatness values for a given set of parameters of a domain in x-y plane 
-    # We then take the mean of the non nan values and define this number as the flatness over the domain in x-y plane.
+    F[i] = flatness_1dof_sn(-1,10,500,parameters)
     print(F[i])
 
-#%%
+#%% Illustration of the initial conditions in the phase space
 xVec = np.linspace(-2,6,resX)
 pxVec = np.linspace(-5,5,resX)
 xMat, yMat = np.meshgrid(xVec, pxVec)

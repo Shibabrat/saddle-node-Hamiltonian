@@ -217,52 +217,79 @@ def sampling_configuration(x_min,x_max,y_min,y_max,num_pts,par,e):
 
 #%%Depth&flatness
 
-def depth(alpha,mu,omega,epsilon):
+def depth_2dof_sn(par):
     """ This function returns the value of depth for a given set of parameters
     """
-    depth = -(2*math.sqrt(mu)- (omega**2*epsilon)/(omega**2+epsilon))**3/(6*alpha**2)
+    depth = -(2*math.sqrt(par[4])- (par[6]**2*par[5])/(par[6]**2+par[5]))**3/(6*par[3]**2)
     return depth
 
-
-def grad_pot_saddlenode(x, par):
-    """This function returns the gradient of the potential energy function V(x,y)
-    """     
-
-    dVdx = par[3]*x[0]**2-2*np.sqrt(par[4])*x[0]+par[5]*(x[0]-x[1])
-    dVdy = par[6]**2*x[1]-par[5]*(x[0]-x[1])
+def flatness_2dof_sn(x_min,x_max,y_min,y_max,num_pts,par):
+    """Returns the value of flatness for a given domain [x_min,x_max] x [y_min, y_max] where we discretise this domain
     
-    normF = np.sqrt(dVdx**2 + dVdy**2)
+       with num_pts number of points. definition of flatness is defined as the mean(norm) of nonnan values
+       
+       of ||(dV/dx,dV/dy)||= \sqrt((dV/dx)**2+(dV/dy)**2) over some domain in x,y plane.
+       
+       
+        Parameters
     
-    return normF
+        ----------
+    
+        x_min : float
+    
+            = min x value of the boundary of the domain we want to define our flatness on 
+    
+        x_max : float
+    
+            = max x value of the boundary of the domain we want to define our flatness on 
 
-x = np.linspace(-1,10,500)
-y = np.linspace(-5,5,500)
-normF = np.zeros((500,500))
-for i in range(500):
-    for j in range(500):
-        normF[i,j] = grad_pot_saddlenode([x[i],y[j]], parameters)
-
-num_alp=3 # number of alphas we want to calculate
-F = np.zeros((num_alp,2))
-epsilon = np.array([0,5])
-alpha = np.array([1,2,5])
-#%% Perform the calculation
-for i in range(len(alpha)):
-    for j in range(len(epsilon)):
-        parameters = np.array([MASS_A, MASS_B, EPSILON_S, alpha[i], mu, epsilon[j], omega])
-        normF = np.zeros((500,500))
-        for k1 in range(500):
-            for k2 in range(500):
-                normF[k1,k2] = grad_pot_saddlenode([x[k1],y[k2]], parameters)
+        y_min : float
+    
+            = min y value of the boundary of the domain we want to define our flatness on 
+    
+        y_max : float
+    
+            = max y value of the boundary of the domain we want to define our flatness on 
             
-        F[i,j] = np.nanmean(normF)
-        # We can calculate flatness values for a given set of parameters of a domain in x-y plane 
-        # We then take the mean of the non nan values and define this number as the flatness over the domain in x-y plane.
-        print(F[i,j])
+        num_pts : int
+            
+            = number of points we want to discretise our domain with this number
+              
+              of points
+    
+        parameters : float (list)
+    
+            model parameters
+    
+    
+    
+        Returns
+    
+        -------
+    
+        F : float
+    
+            value of flatness over this particular domain with model parameters
         
-flat_group = open("flatness_2ndtry_minalpha=%smaxalpha=%s_epsilon=%s.txt" %(alpha[0],alpha[-1],epsilon),'a+')
-np.savetxt(flat_group.name,F,fmt='%1.16e')
-flat_group.close()
+    """
+    def grad_pot_saddlenode2(x, par):
+        """This function returns the gradient of the potential energy function V(x,y)
+        """     
+    
+        dVdx = par[3]*x[0]**2-2*np.sqrt(par[4])*x[0]+par[5]*(x[0]-x[1])
+        dVdy = par[6]**2*x[1]-par[5]*(x[0]-x[1])
+        
+        normF = np.sqrt(dVdx**2 + dVdy**2)
+        
+        return normF
+    x = np.linspace(x_min,x_max,num_pts)
+    y = np.linspace(y_min,y_max,num_pts)
+    normF = np.zeros((num_pts,num_pts))
+    for i in range(num_pts):
+        for j in range(num_pts):
+            normF[i,j] = grad_pot_saddlenode2([x[i],y[j]],par)
+    F = np.nanmean(normF)
+    return F
   
 #%% old version
 num_sim=100 # The expected time to run the simulation for 3 different alphas, num_sim=100 takes approx 100 min.
@@ -414,10 +441,9 @@ e=0.5
 alpha1=1
 alpha2=2
 alpha3=5
-epsilon= 5
-parameters=np.array([MASS_A, MASS_B, EPSILON_S, alpha1, mu, epsilon, omega])
-D = np.array([depth(alpha1,mu,omega,epsilon),depth(alpha2,mu,omega,epsilon),depth(alpha3,mu,omega,epsilon)])
+epsilon= 0
 
+parameters=np.array([MASS_A, MASS_B, EPSILON_S, alpha1, mu, epsilon, omega])  
 with open("checke=%s_par=%s_numsim=%s.txt" %(e,parameters[3:],num_sim),'a+') as react_time_file:
     print('Loading the reaction time from data file',react_time_file.name,'\n') 
     event_t1 = np.loadtxt(react_time_file.name)
@@ -440,6 +466,17 @@ with open("checke=%s_par=%s_numsim=%s.txt" %(e,parameters[3:],num_sim),'a+') as 
 
 #%% Plot the reaction probability as a function of time
 axis_fs=30
+num_alp=3 # number of alphas we want to calculate
+F = np.zeros((num_alp))
+alpha = np.array([1,2,5])
+D = depth_2dof_sn(np.array([MASS_A, MASS_B, EPSILON_S, alpha, mu, epsilon, omega]))
+
+for i in range(num_alp):
+    parameters = np.array([MASS_A, MASS_B, EPSILON_S, alpha[i], mu, epsilon, omega])
+        
+    F[i] = flatness_2dof_sn(-1,10,-5,5,500,parameters)
+    print(F[i])
+        
 sns.set(font_scale = 2)
 event_t1 = np.sort(event_t1,axis=None)
 event_t2 = np.sort(event_t2,axis=None)
@@ -450,8 +487,8 @@ alpha = [1,2,5]
 fig, ax1 = plt.subplots()
 
 # These are in unitless percentages of the figure size. (0,0 is bottom left)
-#left, bottom, width, height = [0.15, 0.4, 0.2, 0.2]
-left, bottom, width, height = [0.65, 0.2, 0.2, 0.2]
+left, bottom, width, height = [0.22, 0.45, 0.2, 0.2]
+#left, bottom, width, height = [0.65, 0.2, 0.2, 0.2]
 ax2 = fig.add_axes([left, bottom, width, height])
 #plot1
 for i in range(3):
@@ -462,7 +499,7 @@ for i in range(3):
     for j in range(len(react_time)):
         react_prob[j] = (j+1)/len(event_t)
     ax1.plot(react_time,react_prob, label=r'$\alpha=%s,\mathcal{D}=%.2f,\mathcal{F}=%.2f$'\
-            %(alpha[i],D[i],F[i,1]))
+            %(alpha[i],D[i],F[i]))
 
 ax1.set_xlabel('$t$', fontsize=axis_fs)
 ax1.set_ylabel('reaction probability', fontsize=axis_fs)
@@ -477,14 +514,18 @@ for i in range(3):
     react_prob = np.zeros((len(react_time),1))
     for j in range(len(react_time)):
         react_prob[j] = (j+1)/len(event_t)
+    # extend the reaction probaility graph for uncoupled system at a later time
+    if react_time[-1]<15:
+        react_prob=np.append(react_prob,react_prob[-1])
+        react_time=np.append(react_time,20)
     ax2.plot(react_time,react_prob, label=r'$\alpha=%s,\mathcal{D}=%.2f,\mathcal{F}=%.2f$'\
-            %(alpha[i],D[i],F[i,1]))
+            %(alpha[i],D[i],F[i]))
 
 #ax2.set_xlabel('$t$', fontsize=axis_fs)
 #ax2.set_ylabel('reaction probability', fontsize=axis_fs)
 ax2.set_xlim(5, 20)
-#ax2.set_ylim(0.0, 0.5)
-ax2.set_ylim(0.8, 1)
+ax2.set_ylim(0.0, 0.5)
+#ax2.set_ylim(0.8, 1)
 
 plt.show()
 plt.savefig('reactprob2_alp=1_2_5_mu4_ome3_e=0dot5_ep=%s.pdf'%(epsilon), format='pdf', \

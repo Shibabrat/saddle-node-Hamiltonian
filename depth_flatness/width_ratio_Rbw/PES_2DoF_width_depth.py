@@ -22,18 +22,51 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib as mpl
 from matplotlib import cm
 from pylab import rcParams
-mpl.rcParams['mathtext.fontset'] = 'cm'
-mpl.rcParams['mathtext.rm'] = 'serif'
-%matplotlib
+import seaborn as sns
 
+fal = 30 # fontsize axis labels
+
+ftl = 20 # fontsize tick labels
+
+mpl.rcParams['xtick.labelsize'] = ftl
+
+mpl.rcParams['ytick.labelsize'] = ftl
+
+# mpl.rcParams['ztick.labelsize'] = ftl
+
+mpl.rcParams['axes.labelsize'] = fal
+
+#m = cm.ScalarMappable(cmap=cm.jet)
+
+mpl.rcParams['font.weight'] = 'normal'
+
+
+
+lw = 3.0 # linewidth for line plots
+
+mpl.rcParams['mathtext.fontset'] = 'cm'
+
+mpl.rcParams['mathtext.rm'] = 'serif'
+
+
+
+plt.style.use('seaborn')
+
+
+
+rcParams['figure.figsize'] = 8, 8 
+
+axis_fs = 30
+
+savefig_flag = True
 #%%
 MASS_A=1.0
 MASS_B=1.0
 EPSILON_S=0.0
 #alpha=1.0
 #mu=alpha**(3/4)
-mu=0.1
-omega=1.0
+mu=4
+omega=3
 epsilon=0
 axis_fs=20
 
@@ -63,6 +96,7 @@ def depth(alpha,mu,omega,epsilon):
 
 #%%
 plt.close('all')
+sns.set(font_scale = 2)
 # ratio of width of the bottleneck/width of the well
 #widratio = lambda alpha: math.sqrt(e/(e+(2*math.sqrt(mu)- (omega**2*epsilon)/(omega**2+epsilon))**3/(6*alpha**2)))
 alpha = np.linspace(1.e-5, 10, 100)
@@ -72,15 +106,15 @@ def widthratio(alpha,mu,omega,epsilon,e):
 
 ax = plt.gca()
 e= 0.01
-plot1 = ax.plot(alpha,widthratio(alpha,mu,omega,epsilon,e),label=r'$R_{bw},\mu=0.1,\omega=1,H=0.01$') # plot width ratio as a function of alpha
+plot1 = ax.plot(alpha,widthratio(alpha,mu,omega,epsilon,e),label=r'$e=0.01$') # plot width ratio as a function of alpha
 e= 0.05
-plot2 = ax.plot(alpha,widthratio(alpha,mu,omega,epsilon,e),label=r'$R_{bw}, \mu=0.1,\omega=1,H=0.05$') # plot width ratio as a function of alpha
+plot2 = ax.plot(alpha,widthratio(alpha,mu,omega,epsilon,e),label=r'$e=0.05$') # plot width ratio as a function of alpha
 e= 0.1
-plot3 = ax.plot(alpha,widthratio(alpha,mu,omega,epsilon,e),label=r'$R_{bw}, \mu=0.1,\omega=1,H=0.1$') # plot width ratio as a function of alpha
+plot3 = ax.plot(alpha,widthratio(alpha,mu,omega,epsilon,e),label=r'$e=0.1$') # plot width ratio as a function of alpha
 e= 0.5
-plot4 = ax.plot(alpha,widthratio(alpha,mu,omega,epsilon,e),label=r'$R_{bw}, \mu=0.1,\omega=1,H=0.5$') # plot width ratio as a function of alpha
+plot4 = ax.plot(alpha,widthratio(alpha,mu,omega,epsilon,e),label=r'$e=0.5$') # plot width ratio as a function of alpha
 e=1.0
-plot6 = ax.plot(alpha,widthratio(alpha,mu,omega,epsilon,e),label=r'$R_{bw}, \mu=0.1,\omega=1,H=1.0$') # plot width ratio as a function of alpha
+plot6 = ax.plot(alpha,widthratio(alpha,mu,omega,epsilon,e),label=r'$e=1.0$') # plot width ratio as a function of alpha
 
 
 ax.set_xlabel(r'$\alpha$', fontsize=axis_fs)
@@ -94,6 +128,7 @@ plt.show()
 
 #%% plot the ratio as a function of depth
 plt.close('all')
+sns.set(font_scale = 2)
 # ratio of width of the bottleneck/width of the well
 #widratio = lambda alpha: math.sqrt(e/(e+(2*math.sqrt(mu)- (omega**2*epsilon)/(omega**2+epsilon))**3/(6*alpha**2)))
 depth = np.linspace(-10, -1.e-5, 100)
@@ -103,15 +138,15 @@ def widthratio(depth,e):
 
 ax = plt.gca()
 e= 0.01
-plot1 = ax.plot(depth,widthratio(depth,e),label=r'$R_{bw},\mu=0.1,\omega=1,H=0.01$') # plot width ratio as a function of alpha
+plot1 = ax.plot(depth,widthratio(depth,e),label=r'$e=0.01$') # plot width ratio as a function of alpha
 e= 0.05
-plot2 = ax.plot(depth,widthratio(depth,e),label=r'$R_{bw}, \mu=0.1,\omega=1,H=0.05$') # plot width ratio as a function of alpha
+plot2 = ax.plot(depth,widthratio(depth,e),label=r'$e=0.05$') # plot width ratio as a function of alpha
 e= 0.1
-plot3 = ax.plot(depth,widthratio(depth,e),label=r'$R_{bw}, \mu=0.1,\omega=1,H=0.1$') # plot width ratio as a function of alpha
+plot3 = ax.plot(depth,widthratio(depth,e),label=r'$e=0.1$') # plot width ratio as a function of alpha
 e= 0.5
-plot4 = ax.plot(depth,widthratio(depth,e),label=r'$R_{bw}, \mu=0.1,\omega=1,H=0.5$') # plot width ratio as a function of alpha
+plot4 = ax.plot(depth,widthratio(depth,e),label=r'$e=0.5$') # plot width ratio as a function of alpha
 e=1.0
-plot6 = ax.plot(depth,widthratio(depth,e),label=r'$R_{bw}, \mu=0.1,\omega=1,H=1.0$') # plot width ratio as a function of alpha
+plot6 = ax.plot(depth,widthratio(depth,e),label=r'$e=1.0$') # plot width ratio as a function of alpha
 
 
 
@@ -121,5 +156,8 @@ ax.set_ylabel(r'$R_{bw}(\mathcal{D})$', fontsize=axis_fs)
 legend = ax.legend(loc='best')
 ax.set_xlim(-10, 0)
 ax.set_ylim(0, 1)
-plt.grid()
+#plt.grid()
 plt.show()
+plt.savefig('Rbw_2dof_dep_mu=%s_ome=%s_ep=%s.pdf'%(mu,omega,epsilon), format='pdf', \
+
+            bbox_inches='tight')

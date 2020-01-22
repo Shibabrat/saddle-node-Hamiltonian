@@ -48,7 +48,11 @@ savefig_flag = True
 resX = 100
 alpha = 1
 mu = 4
-
+MASS_A=1.0
+MASS_B=1.0
+EPSILON_S=0.0
+axis_fs=30
+parameters = np.array([MASS_A, MASS_B, EPSILON_S, alpha, mu])
 
 def depth(alpha, mu):
      """ definition of depth for 1dof system
@@ -67,23 +71,60 @@ def depth(alpha, mu):
 
 
 # definition of flatness (2nd version, i.e. mean of norm(dVdx) over some domain \Omega), 1dof flatness calculation
-def flatness(a,b, alpha, mu):
-    """This function returns the flatness for 1 dof system. flatness is defined as 
-    the mean of norm(dVdx) over some domain \Omega \in [a, b].
+def flatness_1dof_sn(x_min,x_max,num_pts,par):
+    """Returns the value of flatness for a given domain [x_min,x_max] where we discretise this domain
     
-    Parameters:
-    a is left end of the domain \Omega
-    b is right end of the domain \Omega
-    alpha
-    mu
+       with num_pts number of points. definition of flatness is defined as the mean(norm) of nonnan values
+       
+       of dV/dx over some domain in x coordinates.
+       
+       
+        Parameters
     
-    Returns:
-    float:
-        flatness
-    """     
-    flatness = 1/(b-a) * (-np.sqrt(mu)*(b**2-a**2)+ alpha/3*(b**3-a**3))
+        ----------
     
-    return flatness
+        x_min : float
+    
+            = min value of the boundary of the domain we want to define our flatness on 
+    
+        x_max : float
+    
+            = max value of the boundary of the domain we want to define our flatness on 
+            
+        num_pts : int
+            
+            = number of points we want to discretise our domain with this number
+              
+              of points
+    
+        parameters : float (list)
+    
+            model parameters
+    
+    
+    
+        Returns
+    
+        -------
+    
+        F : float
+    
+            value of flatness over this particular domain with model parameters
+        
+    """
+    def grad_pot_saddlenode(x, par):
+        """This function returns the gradient of the potential energy function V(x,y)
+        """     
+    
+        dVdx = par[3]*x**2-2*np.sqrt(par[4])*x
+        
+        return abs(dVdx)
+    x = np.linspace(x_min,x_max,num_pts)
+    normF = np.zeros((num_pts))
+    for i in range(num_pts):
+        normF[i] = grad_pot_saddlenode(x[i],par)
+    F = np.nanmean(normF)
+    return F
 
 
 def widthratio(alpha,mu,e):
@@ -108,9 +149,13 @@ def widthratio(alpha,mu,e):
 sns.set(font_scale = 2)
 figH = plt.figure()
 ax = figH.gca()
-num_alp=100
+num_alp=1000
 alpha = np.linspace(1e-10,10,num_alp)
-F = flatness(-1,10,alpha, mu)
+F = np.zeros(num_alp)
+for i in range(num_alp):
+    parameters = np.array([MASS_A, MASS_B, EPSILON_S, alpha[i], mu])
+    F[i] = flatness_1dof_sn(-1,10,500,parameters)
+    print(F[i])
 D = depth(alpha, mu)
 plot1 = ax.plot(alpha[1:],abs(F[1:]),label=r'$\mathcal{F},\mu = 4$')
 legend = ax.legend(loc='best')
@@ -142,6 +187,7 @@ plt.grid('on')
 plt.show()
 
 #%% flatness against Rbw plottings
+
 plt.close('all')
 
 sns.set(font_scale = 2)

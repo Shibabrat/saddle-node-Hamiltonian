@@ -22,9 +22,43 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib as mpl
 from matplotlib import cm
 from pylab import rcParams
+import seaborn as sns
+
+fal = 30 # fontsize axis labels
+
+ftl = 20 # fontsize tick labels
+
+mpl.rcParams['xtick.labelsize'] = ftl
+
+mpl.rcParams['ytick.labelsize'] = ftl
+
+# mpl.rcParams['ztick.labelsize'] = ftl
+
+mpl.rcParams['axes.labelsize'] = fal
+
+#m = cm.ScalarMappable(cmap=cm.jet)
+
+mpl.rcParams['font.weight'] = 'normal'
+
+
+
+lw = 3.0 # linewidth for line plots
+
 mpl.rcParams['mathtext.fontset'] = 'cm'
+
 mpl.rcParams['mathtext.rm'] = 'serif'
-%matplotlib
+
+
+
+plt.style.use('seaborn')
+
+
+
+rcParams['figure.figsize'] = 8, 8 
+
+axis_fs = 30
+
+savefig_flag = True
 
 #%%
 MASS_A=1.0
@@ -34,55 +68,106 @@ resX=100
 
 alpha = 1
 mu=4
-omega=3.0
-epsilon=0.0
+omega=3
+epsilon=0
 axis_fs=20
 e=0.01
 parameters = np.array([MASS_A, MASS_B, EPSILON_S, alpha, mu, epsilon, omega])
 
 #%% definition of flatness (2nd version, i.e. mean of norm(dVdx) over some domain \Omega)
-#%% 2dof flatness calculation
-def grad_pot_saddlenode(x, par):
-    """This function returns the gradient of the potential energy function V(x,y)
-    """     
+def widthratio(alpha,mu,omega,epsilon,e):
+    ratio = np.sqrt(e/(e+(2*math.sqrt(mu)- (omega**2*epsilon)/(omega**2+epsilon))**3/(6*alpha**2)))
+    return ratio
 
-    dVdx = par[3]*x[0]**2-2*np.sqrt(par[4])*x[0]+par[5]*(x[0]-x[1])
-    dVdy = par[6]**2*x[1]-par[5]*(x[0]-x[1])
+def flatness_2dof_sn(x_min,x_max,y_min,y_max,num_pts,par):
+    """Returns the value of flatness for a given domain [x_min,x_max] x [y_min, y_max] where we discretise this domain
     
-    normF = np.sqrt(dVdx**2 + dVdy**2)
+       with num_pts number of points. definition of flatness is defined as the mean(norm) of nonnan values
+       
+       of ||(dV/dx,dV/dy)||= \sqrt((dV/dx)**2+(dV/dy)**2) over some domain in x,y plane.
+       
+       
+        Parameters
     
-    return normF
+        ----------
+    
+        x_min : float
+    
+            = min x value of the boundary of the domain we want to define our flatness on 
+    
+        x_max : float
+    
+            = max x value of the boundary of the domain we want to define our flatness on 
 
-x = np.linspace(-1,10,500)
-y = np.linspace(-5,5,500)
+        y_min : float
+    
+            = min y value of the boundary of the domain we want to define our flatness on 
+    
+        y_max : float
+    
+            = max y value of the boundary of the domain we want to define our flatness on 
+            
+        num_pts : int
+            
+            = number of points we want to discretise our domain with this number
+              
+              of points
+    
+        parameters : float (list)
+    
+            model parameters
+    
+    
+    
+        Returns
+    
+        -------
+    
+        F : float
+    
+            value of flatness over this particular domain with model parameters
+        
+    """
+    def grad_pot_saddlenode2(x, par):
+        """This function returns the gradient of the potential energy function V(x,y)
+        """     
+    
+        dVdx = par[3]*x[0]**2-2*np.sqrt(par[4])*x[0]+par[5]*(x[0]-x[1])
+        dVdy = par[6]**2*x[1]-par[5]*(x[0]-x[1])
+        
+        normF = np.sqrt(dVdx**2 + dVdy**2)
+        
+        return normF
+    x = np.linspace(x_min,x_max,num_pts)
+    y = np.linspace(y_min,y_max,num_pts)
+    normF = np.zeros((num_pts,num_pts))
+    for i in range(num_pts):
+        for j in range(num_pts):
+            normF[i,j] = grad_pot_saddlenode2([x[i],y[j]],par)
+    F = np.nanmean(normF)
+    return F
 
+#%% define parameter values
 num_alp=100 # number of alphas we want to calculate
-F = np.zeros((num_alp,8))
 epsilon = np.array([0,1,2,3,4,5,6,7])
 #epsilon = np.array([0,0.25,0.5,0.75,1,1.25,1.5,1.75])
+F = np.zeros((num_alp,len(epsilon)))
 alpha = np.linspace(0,10,num_alp)
+
 #%% Perform the calculation
-for i in range(100):
-    for j in range(8):
+for i in range(num_alp):
+    for j in range(len(epsilon)):
         parameters = np.array([MASS_A, MASS_B, EPSILON_S, alpha[i], mu, epsilon[j], omega])
-        normF = np.zeros((500,500))
-        for k1 in range(500):
-            for k2 in range(500):
-                normF[k1,k2] = grad_pot_saddlenode([x[k1],y[k2]], parameters)
-            
-        F[i,j] = np.nanmean(normF)
-        # We can calculate flatness values for a given set of parameters of a domain in x-y plane 
-        # We then take the mean of the non nan values and define this number as the flatness over the domain in x-y plane.
+        
+        F[i,j] = flatness_2dof_sn(-1,10,-5,5,500,parameters)
         print(F[i,j])
         
-flat_group = open("flatness_2ndtry_minalpha=%smaxalpha=%s_epsilon=%s.txt" %(alpha[0],alpha[-1],epsilon),'a+')
-np.savetxt(flat_group.name,F,fmt='%1.16e')
-flat_group.close()
+with open("flatness_2ndtry_minalpha=%smaxalpha=%s_epsilon=%s.txt" %(alpha[0],alpha[-1],epsilon),'a+') as flat_group:
+    np.savetxt(flat_group.name,F,fmt='%1.16e')
 #%% load data
 
-flat_group = open("flatness_2ndtry_minalpha=%smaxalpha=%s_epsilon=%s.txt" %(alpha[0],alpha[-1],epsilon),'a+')
-F = np.loadtxt(flat_group.name)
-flat_group.close()
+with open("flatness_2ndtry_minalpha=%smaxalpha=%s_epsilon=%s.txt" %(alpha[0],alpha[-1],epsilon),'a+') as flat_group:
+    F = np.loadtxt(flat_group.name)
 
 #%%2dof flatness plottings
 ax = plt.gca()
@@ -100,32 +185,27 @@ ax.set_ylabel(r'$\mathcal{F}$', fontsize=axis_fs)
 ax.set_xlim(0, 10)
 ax.set_ylim(-0.01, 350)
 
-plt.grid()
+#plt.grid()
 plt.show()
 
 
 #%% flatness aginist widthratio plottings
 plt.close('all')
-# ratio of width of the bottleneck/width of the well
-#widratio = lambda alpha: math.sqrt(e/(e+(2*math.sqrt(mu)- (omega**2*epsilon)/(omega**2+epsilon))**3/(6*alpha**2)))
+sns.set(font_scale = 2)
 alpha = np.linspace(0,10,num_alp)
-epsilon = 0
-
-def widthratio(alpha,mu,omega,epsilon,e):
-    ratio = np.sqrt(e/(e+(2*math.sqrt(mu)- (omega**2*epsilon)/(omega**2+epsilon))**3/(6*alpha**2)))
-    return ratio
+epsilon = 5
 
 ax = plt.gca()
 e= 0.005
-plot1 = ax.plot(F[:,0],widthratio(alpha,mu,omega,epsilon,e),label=r'width ratio of the uncoupled system, $\mu=4,\omega=3,e=0.005$') # plot width ratio as a function of alpha
+plot1 = ax.plot(F[:,5],widthratio(alpha,mu,omega,epsilon,e),label=r'$e=0.005$') # plot width ratio as a function of alpha
 e= 0.01
-plot2 = ax.plot(F[:,0],widthratio(alpha,mu,omega,epsilon,e),label=r'width ratio of the uncoupled system, $\mu=4,\omega=3,e=0.01$') # plot width ratio as a function of alpha
+plot2 = ax.plot(F[:,5],widthratio(alpha,mu,omega,epsilon,e),label=r'$e=0.01$') # plot width ratio as a function of alpha
 e= 0.05
-plot3 = ax.plot(F[:,0],widthratio(alpha,mu,omega,epsilon,e),label=r'width ratio of the uncoupled system, $\mu=4,\omega=3,e=0.05$') # plot width ratio as a function of alpha
+plot3 = ax.plot(F[:,5],widthratio(alpha,mu,omega,epsilon,e),label=r'$e=0.05$') # plot width ratio as a function of alpha
 e= 0.1
-plot4 = ax.plot(F[:,0],widthratio(alpha,mu,omega,epsilon,e),label=r'width ratio of the uncoupled system, $\mu=4,\omega=3,e=0.1$') # plot width ratio as a function of alpha
+plot4 = ax.plot(F[:,5],widthratio(alpha,mu,omega,epsilon,e),label=r'$e=0.1$') # plot width ratio as a function of alpha
 e=0.5
-plot6 = ax.plot(F[:,0],widthratio(alpha,mu,omega,epsilon,e),label=r'width ratio of the uncoupled system, $\mu=4,\omega=3,e=0.5$') # plot width ratio as a function of alpha
+plot6 = ax.plot(F[:,5],widthratio(alpha,mu,omega,epsilon,e),label=r'$e=0.5$') # plot width ratio as a function of alpha
 
 
 ax.set_xlabel(r'$\mathcal{F}$', fontsize=axis_fs)
@@ -134,5 +214,8 @@ ax.set_ylabel('$R_{bw}(\mathcal{F})$', fontsize=axis_fs)
 legend = ax.legend(loc='best')
 ax.set_xlim(0, 300)
 ax.set_ylim(0, 1)
-plt.grid()
+#plt.grid()
 plt.show()
+#plt.savefig('Rbw_2dof_flat_mu=%s_ome=%s_ep=%s.pdf'%(mu,omega,epsilon), format='pdf', \
+#
+#            bbox_inches='tight')

@@ -80,7 +80,7 @@ parameters = np.array([MASS_A, MASS_B, EPSILON_S, alpha, mu, epsilon, omega])
 def depth_2dof_sn(par):
     """ This function returns the value of depth for a given set of parameters
     """
-    depth = -(2*math.sqrt(par[4])- (par[6]**2*par[5])/(par[6]**2+par[5]))**3/(6*par[3]**2)
+    depth = (2*math.sqrt(par[4])- (par[6]**2*par[5])/(par[6]**2+par[5]))**3/(6*par[3]**2)
     return depth
 
 def flatness_2dof_sn(x_min,x_max,y_min,y_max,num_pts,par):
@@ -117,7 +117,7 @@ def flatness_2dof_sn(x_min,x_max,y_min,y_max,num_pts,par):
               
               of points
     
-        parameters : float (list)
+        par : float (list)
     
             model parameters
     
@@ -151,29 +151,55 @@ def flatness_2dof_sn(x_min,x_max,y_min,y_max,num_pts,par):
     F = np.nanmean(normF)
     return F
 
-#%%
+#%%Depth as a function of alpha
 sns.set(font_scale = 2)
 num_alp=1000
 alpha = np.linspace(0,10,num_alp)
 epsilon = np.array([0,1,2,3,4,5,6,7])
 ax = plt.gca()
 # we want to use non zero alpha as depeth is not defined for alpha=0
-plot1 = ax.plot(alpha[1:],depth_2dof_sn(np.array([MASS_A, MASS_B, EPSILON_S,alpha[1:],mu,omega,epsilon[0]])),label=r'$\mathcal{D},\epsilon=%s$' %(epsilon[0]))
-plot2 = ax.plot(alpha[1:],depth_2dof_sn(np.array([MASS_A, MASS_B, EPSILON_S,alpha[1:],mu,omega,epsilon[2]])),label=r'$\mathcal{D},\epsilon=%s$' %(epsilon[2]))
-#plot3 = ax.plot(alpha[1:],depth_2dof_sn(np.array([MASS_A, MASS_B, EPSILON_S,alpha[1:],mu,omega,epsilon[3]])),label=r'$\mathcal{D},\epsilon=%s$' %(epsilon[3]))
-plot4 = ax.plot(alpha[1:],depth_2dof_sn(np.array([MASS_A, MASS_B, EPSILON_S,alpha[1:],mu,omega,epsilon[4]])),label=r'$\mathcal{D},\epsilon=%s$' %(epsilon[4]))
-#plot5 = ax.plot(alpha[1:],depth_2dof_sn(np.array([MASS_A, MASS_B, EPSILON_S,alpha[1:],mu,omega,epsilon[5]])),label=r'$\mathcal{D},\epsilon=%s$' %(epsilon[5]))
-plot6 = ax.plot(alpha[1:],depth_2dof_sn(np.array([MASS_A, MASS_B, EPSILON_S,alpha[1:],mu,omega,epsilon[6]])),label=r'$\mathcal{D},\epsilon=%s$' %(epsilon[6]))
+plot1 = ax.plot(alpha[1:],depth_2dof_sn(np.array([MASS_A, MASS_B, EPSILON_S,alpha[1:],mu,omega,epsilon[0]])),lw=lw,label=r'$\mathcal{D},\epsilon=%s$' %(epsilon[0]))
+plot2 = ax.plot(alpha[1:],depth_2dof_sn(np.array([MASS_A, MASS_B, EPSILON_S,alpha[1:],mu,omega,epsilon[2]])),lw=lw,label=r'$\mathcal{D},\epsilon=%s$' %(epsilon[2]))
+#plot3 = ax.plot(alpha[1:],depth_2dof_sn(np.array([MASS_A, MASS_B, EPSILON_S,alpha[1:],mu,omega,epsilon[3]])),lw=lw,label=r'$\mathcal{D},\epsilon=%s$' %(epsilon[3]))
+plot4 = ax.plot(alpha[1:],depth_2dof_sn(np.array([MASS_A, MASS_B, EPSILON_S,alpha[1:],mu,omega,epsilon[4]])),lw=lw,label=r'$\mathcal{D},\epsilon=%s$' %(epsilon[4]))
+#plot5 = ax.plot(alpha[1:],depth_2dof_sn(np.array([MASS_A, MASS_B, EPSILON_S,alpha[1:],mu,omega,epsilon[5]])),lw=lw,label=r'$\mathcal{D},\epsilon=%s$' %(epsilon[5]))
+plot6 = ax.plot(alpha[1:],depth_2dof_sn(np.array([MASS_A, MASS_B, EPSILON_S,alpha[1:],mu,omega,epsilon[6]])),lw=lw,label=r'$\mathcal{D},\epsilon=%s$' %(epsilon[6]))
 legend = ax.legend(loc='best')
 ax.set_xlabel(r'$\alpha$', fontsize=axis_fs)
 ax.set_ylabel(r'$\mathcal{D}$', fontsize=axis_fs)
 ax.set_xlim(0, 10)
-ax.set_ylim(-5, 0)
+ax.set_ylim(0, 5)
 #plt.grid()
 plt.show()
 plt.savefig('dep_mu=4_omega=3_2dof.pdf', format='pdf', \
 
             bbox_inches='tight')
+
+#%%Depth as a function of omega
+sns.set(font_scale = 2)
+num_ome=1000
+alpha = 1
+omega = np.linspace(0,10,num_ome)
+epsilon = np.array([0,1,2,3,4,5,6,7])
+ax = plt.gca()
+# we want to use non zero alpha as depeth is not defined for alpha=0
+plot1 = ax.plot(omega[1:],depth_2dof_sn(np.array([MASS_A, MASS_B, EPSILON_S,alpha,mu,omega[1:],epsilon[0]])),lw=lw,label=r'$\mathcal{D},\epsilon=%s$' %(epsilon[0]))
+plot2 = ax.plot(omega[1:],depth_2dof_sn(np.array([MASS_A, MASS_B, EPSILON_S,alpha,mu,omega[1:],epsilon[2]])),lw=lw,label=r'$\mathcal{D},\epsilon=%s$' %(epsilon[2]))
+#plot3 = ax.plot(omega[1:],depth_2dof_sn(np.array([MASS_A, MASS_B, EPSILON_S,alpha,mu,omega[1:],epsilon[3]])),lw=lw,label=r'$\mathcal{D},\epsilon=%s$' %(epsilon[3]))
+plot4 = ax.plot(omega[1:],depth_2dof_sn(np.array([MASS_A, MASS_B, EPSILON_S,alpha,mu,omega[1:],epsilon[4]])),lw=lw,label=r'$\mathcal{D},\epsilon=%s$' %(epsilon[4]))
+#plot5 = ax.plot(omega[1:],depth_2dof_sn(np.array([MASS_A, MASS_B, EPSILON_S,alpha,mu,omega[1:],epsilon[5]])),lw=lw,label=r'$\mathcal{D},\epsilon=%s$' %(epsilon[5]))
+plot6 = ax.plot(omega[1:],depth_2dof_sn(np.array([MASS_A, MASS_B, EPSILON_S,alpha,mu,omega[1:],epsilon[6]])),lw=lw,label=r'$\mathcal{D},\epsilon=%s$' %(epsilon[6]))
+legend = ax.legend(loc='best')
+ax.set_xlabel(r'$\omega$', fontsize=axis_fs)
+ax.set_ylabel(r'$\mathcal{D}$', fontsize=axis_fs)
+ax.set_xlim(0, 10)
+ax.set_ylim(0, 12)
+#plt.grid()
+plt.show()
+plt.savefig('dep_mu=4_alpha=1_2dof.pdf', format='pdf', \
+
+            bbox_inches='tight')
+
 #%%
 num_alp=100 # number of alphas we want to calculate
 epsilon = np.array([0,1,2,3,4,5,6,7])
@@ -197,14 +223,14 @@ with open("flatness_2ndtry_minalpha=%smaxalpha=%s_epsilon=%s.txt" %(alpha[0],alp
     F = np.loadtxt(flat_group.name)
 
 ax = plt.gca()
-plot1 = ax.plot(alpha[1:],F[1:,0],label=r'$\mathcal{F},\epsilon=0$')
-#plot2 = ax.plot(alpha[1:],F[1:,1],label=r'$\mathcal{F},\epsilon=1$')
-plot3 = ax.plot(alpha[1:],F[1:,2],label=r'$\mathcal{F},\epsilon=2$')
-#plot4 = ax.plot(alpha[1:],F[1:,3],label=r'$\mathcal{F},\epsilon=3$')
-plot5 = ax.plot(alpha[1:],F[1:,4],label=r'$\mathcal{F},\epsilon=4$')
-#plot6 = ax.plot(alpha[1:],F[1:,5],label=r'$\mathcal{F},\epsilon=5$')
-plot7 = ax.plot(alpha[1:],F[1:,6],label=r'$\mathcal{F},\epsilon=6$')
-#plot8 = ax.plot(alpha[1:],F[1:,7],label=r'$\mathcal{F},\epsilon=7$')
+plot1 = ax.plot(alpha[1:],F[1:,0],lw=lw,label=r'$\mathcal{F},\epsilon=0$')
+#plot2 = ax.plot(alpha[1:],F[1:,1],lw=lw,label=r'$\mathcal{F},\epsilon=1$')
+plot3 = ax.plot(alpha[1:],F[1:,2],lw=lw,label=r'$\mathcal{F},\epsilon=2$')
+#plot4 = ax.plot(alpha[1:],F[1:,3],lw=lw,label=r'$\mathcal{F},\epsilon=3$')
+plot5 = ax.plot(alpha[1:],F[1:,4],lw=lw,label=r'$\mathcal{F},\epsilon=4$')
+#plot6 = ax.plot(alpha[1:],F[1:,5],lw=lw,label=r'$\mathcal{F},\epsilon=5$')
+plot7 = ax.plot(alpha[1:],F[1:,6],lw=lw,label=r'$\mathcal{F},\epsilon=6$')
+#plot8 = ax.plot(alpha[1:],F[1:,7],lw=lw,label=r'$\mathcal{F},\epsilon=7$')
 legend = ax.legend(loc='best')
 ax.set_xlabel(r'$\alpha$', fontsize=axis_fs)
 ax.set_ylabel(r'$\mathcal{F}$', fontsize=axis_fs)
@@ -214,5 +240,49 @@ ax.set_ylim(-0.01, 350)
 #plt.grid()
 plt.show()
 plt.savefig('flat_2ndtry_mu=4_omega=3_2dof.pdf', format='pdf', \
+
+            bbox_inches='tight')
+
+#%% flatness aginist omega
+num_ome=100 # number of alphas we want to calculate
+alpha=1
+epsilon = np.array([0,1,2,3,4,5,6,7])
+#epsilon = np.array([0,0.25,0.5,0.75,1,1.25,1.5,1.75])
+F = np.zeros((num_ome,len(epsilon)))
+omega = np.linspace(0,10,num_ome)
+
+#%% Perform the calculation
+for i in range(num_ome):
+    for j in range(len(epsilon)):
+        parameters = np.array([MASS_A, MASS_B, EPSILON_S, alpha, mu, epsilon[j], omega[i]])
+        
+        F[i,j] = flatness_2dof_sn(-1,10,-5,5,500,parameters)
+        print(F[i,j])
+        
+with open("flatness_2ndtry_minalpha=%smaxomega=%s_epsilon=%s.txt" %(omega[0],omega[-1],epsilon),'a+') as flat_group:
+    np.savetxt(flat_group.name,F,fmt='%1.16e')
+#%% 2dof flatness plottings
+sns.set(font_scale = 2)
+with open("flatness_2ndtry_minalpha=%smaxomega=%s_epsilon=%s.txt" %(omega[0],omega[-1],epsilon),'a+') as flat_group:
+    F = np.loadtxt(flat_group.name)
+
+ax = plt.gca()
+plot1 = ax.plot(omega[1:],F[1:,0],lw=lw,label=r'$\mathcal{F},\epsilon=0$')
+#plot2 = ax.plot(omega[1:],F[1:,1],lw=lw,label=r'$\mathcal{F},\epsilon=1$')
+plot3 = ax.plot(omega[1:],F[1:,2],lw=lw,label=r'$\mathcal{F},\epsilon=2$')
+#plot4 = ax.plot(omega[1:],F[1:,3],lw=lw,label=r'$\mathcal{F},\epsilon=3$')
+plot5 = ax.plot(omega[1:],F[1:,4],lw=lw,label=r'$\mathcal{F},\epsilon=4$')
+#plot6 = ax.plot(omega[1:],F[1:,5],lw=lw,label=r'$\mathcal{F},\epsilon=5$')
+plot7 = ax.plot(omega[1:],F[1:,6],lw=lw,label=r'$\mathcal{F},\epsilon=6$')
+#plot8 = ax.plot(omega[1:],F[1:,7],lw=lw,label=r'$\mathcal{F},\epsilon=7$')
+legend = ax.legend(loc='best')
+ax.set_xlabel(r'$\omega$', fontsize=axis_fs)
+ax.set_ylabel(r'$\mathcal{F}$', fontsize=axis_fs)
+ax.set_xlim(0, 10)
+ax.set_ylim(-0.01, 350)
+
+#plt.grid()
+plt.show()
+plt.savefig('flat_2ndtry_mu=4_alpha=1_2dof.pdf', format='pdf', \
 
             bbox_inches='tight')

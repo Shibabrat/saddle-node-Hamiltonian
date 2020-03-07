@@ -71,7 +71,7 @@ parameters = np.array([MASS_A, MASS_B, EPSILON_S, alpha, mu])
 def depth_1dof_sn(par):
     """ This function returns the value of depth for a given set of parameters
     """
-    depth = -4*(math.sqrt(par[4]))**3/(3*par[3]**2)
+    depth = 4*(math.sqrt(par[4]))**3/(3*par[3]**2)
     return depth
 
 def flatness_1dof_sn(x_min,x_max,num_pts,par):
@@ -135,12 +135,12 @@ num_alp = 1000
 alpha = np.linspace(0,10,num_alp)
 ax = plt.gca()
 # we want to use non zero alpha as depeth is not defined for alpha=0
-plot1 = ax.plot(alpha[1:],depth_1dof_sn([MASS_A, MASS_B, EPSILON_S,alpha[1:],mu]),label=r'$\mathcal{D},\mu =%s$' %(mu))
+plot1 = ax.plot(alpha[1:],depth_1dof_sn([MASS_A, MASS_B, EPSILON_S,alpha[1:],mu]),lw=lw,label=r'$\mathcal{D},\mu =%s$' %(mu))
 legend = ax.legend(loc='best')
 ax.set_xlabel(r'$\alpha$', fontsize=axis_fs)
 ax.set_ylabel(r'$\mathcal{D}$', fontsize=axis_fs)
 ax.set_xlim(0, 10)
-ax.set_ylim(-5, 0)
+ax.set_ylim(0, 5)
 
 #plt.grid()
 plt.show()
@@ -160,7 +160,7 @@ for i in range(num_alp):
 
 #%% 1dof flatness plottings
 ax = plt.gca()
-plot1 = ax.plot(alpha[1:],F[1:],label=r'$\mathcal{F},\mu=%s$' %(mu))
+plot1 = ax.plot(alpha[1:],F[1:],lw=lw,label=r'$\mathcal{F},\mu=%s$' %(mu))
 
 legend = ax.legend(loc='best')
 ax.set_xlabel(r'$\alpha$', fontsize=axis_fs)
@@ -170,6 +170,6 @@ ax.set_ylim(-0.01, 400)
 
 #plt.grid()
 plt.show()
-#plt.savefig('flat_2ndtry_mu=4_1dof.pdf', format='pdf', \
-#
-#            bbox_inches='tight')
+plt.savefig('flat_2ndtry_mu=4_1dof.pdf', format='pdf', \
+
+            bbox_inches='tight')

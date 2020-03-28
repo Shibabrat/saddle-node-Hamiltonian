@@ -1,7 +1,7 @@
 % Parameters for the 1 DoF model
-MU = 6;
-ALPHA = 4;
-filename2save = ['output_MU_',num2str(MU),'_ALPHA_',num2str(ALPHA)];
+MU = 2;
+ALPHA = 1;
+filename2save = ['output_mu',num2str(MU),'_alpha',num2str(ALPHA)];
 
 % Parameters of the fimplicit plot
 % limits = [-4*sqrt(MU)/ALPHA 4*sqrt(MU)/ALPHA];
@@ -22,11 +22,54 @@ set(0, ...
 'Defaultaxesfontweight','default');
 
 close all
-figure1 = figure('Position', [50 50 700 700]);
+figure1 = figure('Position', [200 200 1000 500]);
 
+fig1 = subplot(1,2,1);
+% set(fig1, 'Position', [50 50 1000 1000]);
+% ha1 = axes('Units','normalized', ...
+%                 'Position',[150 10 500 400], ...
+%                 'XTickLabel','$x$', ...
+%                 'YTickLabel','$p_x$');
+fimplicit(@(q,p)(0.5*p.^2 - MU^(0.5).*q.^2 + ALPHA*(q.^3/3) - 0), limits, ...
+                'MeshDensity',mesh_density, ...
+                'LineWidth',line_width,'Color','black')
+axis equal
+        
+hold on
+react_traj = fimplicit(@(q,p)(0.5*p.^2 - MU^(0.5).*q.^2 + ALPHA*(q.^3/3) - ...
+                            energy_reaction), limits, ...
+                            'MeshDensity',mesh_density, ...
+                            'LineWidth',line_width,'Color','red');
+        
+fimplicit(@(q,p)(0.5*p.^2 - MU^(0.5).*q.^2 + ALPHA*(q.^3/3) + 5), limits, ...
+            'MeshDensity',mesh_density, ...
+            'LineWidth',line_width,'Color','blue')
+        
+nonreact_traj = fimplicit(@(q,p)(0.5*p.^2 - MU^(0.5).*q.^2 + ALPHA*(q.^3/3) + 1), limits, ...
+                            'MeshDensity',mesh_density, ...
+                            'LineWidth',line_width,'Color','green');
+
+                        
+% Dividing surface and NHIM
+nhim = scatter(0,0,400,'m','Marker','+','Linewidth',5);
+
+ds = scatter([0,0],[-sqrt(2*energy_reaction),sqrt(2*energy_reaction)],100,'c', ...
+            'Marker','o', ...
+            'MarkerFaceColor', 'g', ...
+            'Linewidth',5);
+        
+text(4.5,7,'$\alpha = 1$', 'Fontsize',30);
+xlabel('$x$')
+ylabel('$p_x$')
+
+
+fig2 = subplot(1,2,2);
+% set(fig2, 'Position', [50 50 1000 1000]);
+ALPHA = 2;
 fimplicit(@(q,p)(0.5*p.^2 - MU^(0.5).*q.^2 + ALPHA*(q.^3/3) - 0), limits, ...
             'MeshDensity',mesh_density, ...
             'LineWidth',line_width,'Color','black')
+axis equal
 hold on
 react_traj = fimplicit(@(q,p)(0.5*p.^2 - MU^(0.5).*q.^2 + ALPHA*(q.^3/3) - ...
                             energy_reaction), limits, ...
@@ -50,6 +93,7 @@ ds = scatter([0,0],[-sqrt(2*energy_reaction),sqrt(2*energy_reaction)],100,'c', .
             'MarkerFaceColor', 'g', ...
             'Linewidth',5);
 
+text(4.5,7,'$\alpha = 2$', 'Fontsize',30);
 % leg_hand = legend([react_traj nonreact_traj nhim ds],'Reactive','Non-reactive', ...
 %             'NHIM', 'DS', 'Location', [0.6, 0.78, 0.3, 0.1]);
 % set(leg_hand,'FontSize',20);
@@ -65,14 +109,14 @@ axis equal
 
 % xlabel('$q$')
 % ylabel('$p$','Rotation',0)
-% print(figure1, '-dpng','-r600','output.png')
+xlabel('$x$')
+% ylabel('$p_x$')
+print(figure1, '-dpng','-r600',filename2save)
 
 fig.PaperPositionMode = 'auto';
 % print('output','-dpng','-r0')
-print('-bestfit',filename2save,'-dpdf')
+% print('-bestfit','-dpng','-r600',filename2save)
 
 %%
 
-
-
-
+    

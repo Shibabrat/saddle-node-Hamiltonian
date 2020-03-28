@@ -183,7 +183,7 @@ function [xW,x0W] = get_POManiLocal_saddlenode2dof(x0po,T,frac,...
         % Get tube intersection with the Surface-Of-Section; takes the same
         % inputs as the above function, except also returns the event
         % solutions
-        eventSwitch = 'off';
+        eventSwitch = 'on';
         numTimesteps = 500;
         [x,t,te,xe,ie] = get_traj_sos_saddlenode2dof(x0W_all(mfrac,1:N)', ...
                             tb, tf, eventSwitch, numTimesteps, par);
@@ -218,7 +218,7 @@ function [xW,x0W] = get_POManiLocal_saddlenode2dof(x0po,T,frac,...
         % Storing the event of intersection with plane U1
         if ~isempty(xe)
 %             xeU1 = [xeU1; xe(end,:)];
-            xeU1 = [xeU1; xe];
+            xeU1 = [xeU1; te, xe];
         end
 
     end

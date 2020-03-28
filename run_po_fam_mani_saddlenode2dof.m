@@ -19,12 +19,19 @@ MASS_A = 1.0; MASS_B = 1.0; % Mass-weighted momenta
 % ALPHA = 0.05;
 % OMEGA = 1.0;
 % EPSILON = 1.5;
+<<<<<<< Updated upstream
 
 MU = 4.0;
 OMEGA = 3.0;
 ALPHA = 1.0;
 % EPSILON = 1e-20;
 EPSILON = 5.0;
+=======
+MU = 4.00;
+ALPHA = 5.00;
+OMEGA = 3.00;
+EPSILON = 5.00;
+>>>>>>> Stashed changes
 
 % MU = 0.1;
 % ALPHA = 2.0;
@@ -48,8 +55,13 @@ EPSILON = 5.0;
 % OMEGA = 1.25;
 % EPSILON = 1.5;
 
+<<<<<<< Updated upstream
 % n_mfd_traj = 1000;
 n_mfd_traj = 15;
+=======
+n_mfd_traj = 1000;
+% n_mfd_traj = 25;
+>>>>>>> Stashed changes
 
 parameters = [MASS_A MASS_B MU ALPHA OMEGA EPSILON];
 
@@ -61,7 +73,7 @@ eSaddle = get_TE_saddlenode2dof(eqPt', parameters); % energy of the saddle eq pt
 
 % [q,x] = SNode_wellLocation(MU, ALPHA, OMEGA, EPSILON)
 
-%% 
+%%%
 
 nFam = 100; % use nFam = 10 for low energy
 
@@ -71,7 +83,7 @@ Ax2  = 2*Ax1; % initial amplitude (2 of 2)
 
 tic;
 
-%  get the initial conditions and periods for a family of periodic orbits
+%  get the initial con`ditions and periods for a family of periodic orbits
 po_fam_file = ['x0_tp_fam_eqPt',num2str(eqNum),'_saddlenode2dof.txt'];
 [po_x0Fam,po_tpFam] = get_POFam_saddlenode2dof(eqNum, Ax1, Ax2, ...
                             nFam, po_fam_file, parameters) ; 
@@ -81,7 +93,7 @@ poFamRuntime = toc;
 x0podata = [po_x0Fam, po_tpFam];
 
 
-%%
+%%%
 
 % begins with a family of periodic orbits and steps until crossing the
 % initial condition with target energy 
@@ -108,7 +120,7 @@ save(['model_parameters_eqPt',num2str(eqNum), ...
 
 
 
-%%
+%%%
 
 % target specific periodic orbit
 % Target PO of specific energy with high precision; does not work for the
@@ -144,7 +156,12 @@ del = 1e-6;
 
 %% Stable manifold, negative branch
 
+<<<<<<< Updated upstream
 tmfd = 10.5*TPOFam(nMed);
+=======
+% tmfd = 10;
+tmfd = 2.5*TPOFam(nMed);
+>>>>>>> Stashed changes
 % deltaE = 0.125;
 % stbl = 1; dir = 1;
 stbl = -1; dir = -1;
@@ -165,12 +182,46 @@ view(18,15)
 box on
 grid on
 
-%% Stable manifold, positive branch
 
+<<<<<<< Updated upstream
 % n_mfd_traj = 1000;
 stbl = -1; dir = 1;
 % tmfd = 5*TPOFam(nMed);
 tmfd = 12.5*TPOFam(nMed);
+=======
+%% Unstable manifold, negative branch
+
+stbl = 1; dir = -1;
+tmfd = 3.2*TPOFam(nMed);
+% tmfd = 2.5*TPOFam(nMed);
+>>>>>>> Stashed changes
+
+tic;    
+
+[xW,x0W] = get_POManiLocal_saddlenode2dof(x0po(nMed,1:4),TPOFam(nMed),frac, ...
+                                            stbl,dir,del,tmfd, ...
+                                            n_mfd_traj,parameters);
+
+maniRuntime = toc
+
+energyTube = ePOFam(nMed) ;
+% title(['Total energy: ', num2str(energyTube)], ...
+%     'interpreter','Latex','Fontsize', 16);
+
+
+<<<<<<< Updated upstream
+stbl = 1; dir = -1;
+tmfd = 10.5*TPOFam(nMed);
+% tmfd = 2.5*TPOFam(nMed);
+=======
+%% Stable manifold, positive branch
+
+% n_mfd_traj = 1000;
+stbl = -1; dir = 1;
+tmfd = 30;
+% tmfd = 15*TPOFam(nMed);
+% tmfd = 5*TPOFam(nMed);
+>>>>>>> Stashed changes
 
 tic;    
 
@@ -185,32 +236,19 @@ energyTube = ePOFam(nMed) ;
 %     'interpreter','Latex','Fontsize', 16);
 view(20,25)
 
-%% Unstable manifold, negative branch
-
-stbl = 1; dir = -1;
-tmfd = 10.5*TPOFam(nMed);
-% tmfd = 2.5*TPOFam(nMed);
-
-tic;    
-
-[xW,x0W] = get_POManiLocal_saddlenode2dof(x0po(nMed,1:4),TPOFam(nMed),frac, ...
-                                            stbl,dir,del,tmfd, ...
-                                            n_mfd_traj,parameters);
-
-maniRuntime = toc
-
-energyTube = ePOFam(nMed) ;
-% title(['Total energy: ', num2str(energyTube)], ...
-%     'interpreter','Latex','Fontsize', 16);
-
-
 
 %% Unstable manifold, positive branch
 
 % n_mfd_traj = 25;
 stbl = 1; dir = 1;
+<<<<<<< Updated upstream
 % tmfd = 8*TPOFam(nMed);
 tmfd = 11.5*TPOFam(nMed);
+=======
+tmfd = 30;
+% tmfd = 15*TPOFam(nMed);
+% tmfd = 5*TPOFam(nMed);
+>>>>>>> Stashed changes
 
 tic;    
 
@@ -218,7 +256,7 @@ tic;
                                             stbl,dir,del,tmfd, ...
                                             n_mfd_traj,parameters);
 
-maniRuntime = toc
+maniRuntime = toc;
 
 energyTube = ePOFam(nMed) ;
 % title(['Total energy: ', num2str(energyTube)], ...

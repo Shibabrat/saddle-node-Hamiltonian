@@ -27,11 +27,18 @@ function fs = draw_energysurf_saddlenode2dof(H_val,par,alpha)
 %         .* exp(-z .* lambda .* x) + D .* (1 - exp(-lambda .* x)).^2 + ...
 %         epsilon_s + (1 ./ (2 .* mu)) .* px.^2  - H_val;
     
-    rgb_col = [0/255 255/255 0/255];
+%     rgb_col = [0/255 255/255 0/255];
+    lightGrey1   = [0.85 0.85 0.85];
+    lightGrey2   = [0.7 0.7 0.7];
+
+    darkGrey1  = [0.4 0.4 0.4];
+    darkGrey2  = [0.2 0.2 0.2];
+    rgb_col = darkGrey1;
      
-    xi = -1; xf = 1;
-    yi = -1; yf = 1;
-    pxi = -1; pxf = 0.5;
+    xi = -2; xf = 2;
+    yi = -2; yf = 2;
+    pxi = -2; pxf = 2;
+%     pxi = -1; pxf = 0.5;
     
 %     xi = -1; xf = 1;
 %     yi = -1; yf = 1;

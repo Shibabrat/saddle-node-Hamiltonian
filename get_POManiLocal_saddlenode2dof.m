@@ -199,9 +199,13 @@ function [xW,x0W] = get_POManiLocal_saddlenode2dof(x0po,T,frac,...
 %         hold on
         if mfd_traj == 1, 
             hold on; grid on
-            xlabel('$q$','interpreter','latex','fontsize',25);
-            ylabel('$x$','interpreter','latex','fontsize',25);
-           zlabel('$p_x$','interpreter','latex','fontsize',25);
+%             xlabel('$q$','interpreter','latex','fontsize',25);
+%             ylabel('$x$','interpreter','latex','fontsize',25);
+%             zlabel('$p_x$','interpreter','latex','fontsize',25);
+            xlabel('$x$','interpreter','latex','fontsize',25);
+            ylabel('$y$','interpreter','latex','fontsize',25);
+            zlabel('$p_y$','interpreter','latex','fontsize',25);
+            
 %             zlabel('$p_x$','interpreter','latex','fontsize',25);
         end
         

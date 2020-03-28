@@ -1,0 +1,27 @@
+#OS junk files
+[Tt]thumbs.db
+*.DS_Store
+.Rhistory
+.ipynb_checkpoints/
+
+#Data and figure files
+*.dat
+*.pdf
+*.txt
+data-figures/
+
+#C++ executable
+__pycache__
+
+#Docs build files
+docs/.Rhistory
+docs/_build/*
+docs/.vscode/
+docs/_static/*
+docs/source/*
+
+# package build files
+dist/*
+
+
+

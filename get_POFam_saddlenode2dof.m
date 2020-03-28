@@ -125,7 +125,7 @@ while abs(dydot1) > MAXdydot1
     y0 = x0;
     % Find first half-period crossing event
 %     MODEL = 'deleonberne2dof';  
-    TSPAN = [0 20];        % allow sufficient time for the half-period crossing event         
+    TSPAN = [0 60];        % allow sufficient time for the half-period crossing event         
     OPTIONS = odeset('RelTol',RelTol,'AbsTol',AbsTol, ...
         'Events',@half_period_event); 
 %     OPTIONS = odeset('RelTol',RelTol,'AbsTol',AbsTol, ...
@@ -137,7 +137,7 @@ while abs(dydot1) > MAXdydot1
                             
 %     [tt,xx,t1,xx1,i1] = ode113(@(t, y)saddlenode2dof(t, y, par), ...
 %                                 TSPAN,xx1(end,:),OPTIONS);
-                            
+                     
 	x1 = xx1(end,1); 
     y1 = xx1(end,2); 
 	dxdot1 = xx1(end,3); 

@@ -15,11 +15,16 @@ global eqNum deltaE parameters
 N = 4;          % dimension of phase space
 MASS_A = 1.0; MASS_B = 1.0; % Mass-weighted momenta
 
-MU = 0.1;
-ALPHA = 0.05;
-OMEGA = 1.0;
-EPSILON = 1.5;
+% MU = 0.1;
+% ALPHA = 0.05;
+% OMEGA = 1.0;
+% EPSILON = 1.5;
 
+MU = 4.0;
+OMEGA = 3.0;
+ALPHA = 1.0;
+% EPSILON = 1e-20;
+EPSILON = 5.0;
 
 % MU = 0.1;
 % ALPHA = 2.0;
@@ -44,7 +49,7 @@ EPSILON = 1.5;
 % EPSILON = 1.5;
 
 % n_mfd_traj = 1000;
-n_mfd_traj = 25;
+n_mfd_traj = 15;
 
 parameters = [MASS_A MASS_B MU ALPHA OMEGA EPSILON];
 
@@ -82,7 +87,7 @@ x0podata = [po_x0Fam, po_tpFam];
 % initial condition with target energy 
 % fileName = 'x0po_T_energy_case1_L41.txt';
 % fileName = 'x0po_T.txt';
-deltaE = 0.2;
+deltaE = 0.5;
 
 po_fam_file = ['x0_tp_fam_eqPt',num2str(eqNum),'_saddlenode2dof.txt'];
 eTarget = eSaddle + deltaE; 
@@ -139,7 +144,7 @@ del = 1e-6;
 
 %% Stable manifold, negative branch
 
-tmfd = 2.5*TPOFam(nMed);
+tmfd = 10.5*TPOFam(nMed);
 % deltaE = 0.125;
 % stbl = 1; dir = 1;
 stbl = -1; dir = -1;
@@ -165,7 +170,7 @@ grid on
 % n_mfd_traj = 1000;
 stbl = -1; dir = 1;
 % tmfd = 5*TPOFam(nMed);
-tmfd = 5*TPOFam(nMed);
+tmfd = 12.5*TPOFam(nMed);
 
 tic;    
 
@@ -183,8 +188,8 @@ view(20,25)
 %% Unstable manifold, negative branch
 
 stbl = 1; dir = -1;
-% tmfd = 3.2*TPOFam(nMed);
-tmfd = 2.5*TPOFam(nMed);
+tmfd = 10.5*TPOFam(nMed);
+% tmfd = 2.5*TPOFam(nMed);
 
 tic;    
 
@@ -205,7 +210,7 @@ energyTube = ePOFam(nMed) ;
 % n_mfd_traj = 25;
 stbl = 1; dir = 1;
 % tmfd = 8*TPOFam(nMed);
-tmfd = 5*TPOFam(nMed);
+tmfd = 11.5*TPOFam(nMed);
 
 tic;    
 
@@ -235,7 +240,7 @@ view(20,25)
 % 
 % %%
 % 
-fs = draw_energysurf_saddlenode2dof(deltaE,parameters,0.5);
+fs = draw_energysurf_saddlenode2dof(deltaE,parameters,0.3);
 
 
 

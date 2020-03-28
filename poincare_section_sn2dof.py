@@ -11,6 +11,9 @@ from pylab import rcParams
 mpl.rcParams['mathtext.fontset'] = 'cm'
 mpl.rcParams['mathtext.rm'] = 'serif'
 
+from matplotlib import rc
+rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+
 fal = 30 # fontsize axis labels
 ftl = 20 # fontsize tick labels
 mpl.rcParams['xtick.labelsize'] = ftl
@@ -40,9 +43,12 @@ MASS_B = 1.0
 MU = 4.00
 ALPHA = 1.00
 OMEGA = 3.00
-EPSILON = 0.00
+EPSILON = 5.00
 
 deltaEnergy = 0.05
+numpts_trial_y = 50
+numpts_trial_py = 50
+
 saddleEnergy = 0
 totalEnergy = saddleEnergy + deltaEnergy
 printFlag = True
@@ -66,22 +72,20 @@ energy_boundary = sn2dof.energysurface_intersect_sos(params, deltaEnergy, 1.0)
 
 
 # Generate initial conditions on the surface of section 
-numpts = 50
 yMax = np.max(energy_boundary[:,0])
 yMin = np.min(energy_boundary[:,0])
 
 pyMax = np.max(energy_boundary[:,1])
 pyMin = np.min(energy_boundary[:,1])
 
-yGrid = np.linspace(yMin, yMax, numpts)
-pyGrid = np.linspace(pyMin, pyMax, numpts)
+yGrid = np.linspace(yMin, yMax, numpts_trial_y)
+pyGrid = np.linspace(pyMin, pyMax, numpts_trial_py)
 
 [yMesh, pyMesh] = np.meshgrid(yGrid, pyGrid)
 
 # Save points that on the energy surface by calculating the momentum coordinate
 x_e = (1/ALPHA)*(2.0*np.sqrt(MU) \
         - (OMEGA**2*EPSILON)/(OMEGA**2 + EPSILON))
-# xGrid = x_e*np.ones((numpts,))
 
 initconds = []
 for y in yGrid:
@@ -94,7 +98,7 @@ for y in yGrid:
             continue
 
 initconds = np.array(initconds)
-
+print('Number of initial conditions on the energy surface: %d'%(np.size(initconds,0)))
 
 intersections_sos = []
 for i in range(np.size(initconds,0)):
@@ -151,7 +155,10 @@ if printFlag:
     ax.set_xlabel(r'$y$', fontsize = 25)
     ax.set_ylabel(r'$p_y$', fontsize = 25)
     # plt.tick_params(axis = 'both', which = 'major', labelsize = 15)
+    plt.savefig(sos_crossings_filename[:-4] + '.png', \
+                dpi = 300, bbox_inches = 'tight')
     plt.show()
+    plt.close()
 
 
 

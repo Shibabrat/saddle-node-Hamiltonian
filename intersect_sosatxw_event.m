@@ -25,8 +25,8 @@ function [xDot,isterminal,direction] = intersect_sosatxw_event(t,x)
     % The zero can be approached from either direction
 %     direction = 0; %0: all directions of crossing 
 %     direction = -1; %works for x(3) < 0 intersection of unstable manifolds
-%     direction = 1; %works for x(3) > 0 intersection of unstable manifolds
 %     direction = 1; %works for x(3) < 0 intersection of stable manifolds
-    direction = -1; %works for x(3) > 0 intersection of stable manifolds
+    direction = 1; %works for x(3) > 0 intersection of unstable manifolds
+%     direction = -1; %works for x(3) > 0 intersection of stable manifolds
     
 end

@@ -195,8 +195,12 @@ function [xW,x0W] = get_POManiLocal_saddlenode2dof(x0po,T,frac,...
 %                 ['x','k']);
         
 %         plot3(x(:,1), x(:,2), x(:,4), ['-',colormfd]);
-        plot3(x(:,1), x(:,2), x(:,4), ['-',colormfd], 'linewidth', 1);
+        numpts_traj = size(x,1);
+        numpts_traj_plot = 10;
+        plot3(x(numpts_traj_plot:end,1), x(numpts_traj_plot:end,2), ...
+            x(numpts_traj_plot:end,4), ['-',colormfd], 'linewidth', 1);
 %         hold on
+
         if mfd_traj == 1, 
             hold on; grid on
 %             xlabel('$q$','interpreter','latex','fontsize',25);
@@ -205,8 +209,6 @@ function [xW,x0W] = get_POManiLocal_saddlenode2dof(x0po,T,frac,...
             xlabel('$x$','interpreter','latex','fontsize',25);
             ylabel('$y$','interpreter','latex','fontsize',25);
             zlabel('$p_y$','interpreter','latex','fontsize',25);
-            
-%             zlabel('$p_x$','interpreter','latex','fontsize',25);
         end
         
         

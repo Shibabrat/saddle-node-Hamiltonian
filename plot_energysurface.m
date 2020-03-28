@@ -1,8 +1,5 @@
 function fs = draw_energysurf_saddlenode2dof(H_val,par,alpha)
 
-% @author: Víctor J. García-Garrido
-% Shibabrat Naik, modified on 11-May-2019
-
     % plot properties
     axesFontName = 'factory';
     % axesFontName = 'Times New Roman';
@@ -37,6 +34,11 @@ function fs = draw_energysurf_saddlenode2dof(H_val,par,alpha)
     pxi = -2; pxf = 2;
 %     pxi = -1; pxf = 0.5;
     
+    xi = -2; xf = 10;
+    yi = -2; yf = 10;
+    pxi = -5; pxf = 5;
+
+
 %     xi = -1; xf = 1;
 %     yi = -1; yf = 1;
 %     pxi = -1; pxf = 1;

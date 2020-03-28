@@ -173,9 +173,13 @@ while abs(dydot1) > MAXdydot1
 %         set(gca,'fontsize',label_fs)
 %         axis([min(x(:,1)) max(x(:,1)) min(x(:,2)) max(x(:,2))]);
 %         axis equal % destroyes the scale for successive plots
-        xlabel('$q$','interpreter','latex','fontsize',axis_fs);
-        ylabel('$x$','interpreter','latex','fontsize',axis_fs);
-        zlabel('$p_x$','interpreter','latex','fontsize',axis_fs);
+%         xlabel('$q$','interpreter','latex','fontsize',axis_fs);
+%         ylabel('$x$','interpreter','latex','fontsize',axis_fs);
+%         zlabel('$p_x$','interpreter','latex','fontsize',axis_fs);
+        xlabel('$x$','interpreter','latex','fontsize',axis_fs);
+        ylabel('$y$','interpreter','latex','fontsize',axis_fs);
+        zlabel('$p_y$','interpreter','latex','fontsize',axis_fs);
+
         title(['$\Delta E$ = ',num2str(mean(e) - 0)], ...
             'interpreter','latex','fontsize',axis_fs);
 %         xlim([-15 15])

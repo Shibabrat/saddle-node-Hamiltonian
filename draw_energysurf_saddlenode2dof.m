@@ -23,9 +23,6 @@ function fs = draw_energysurf_saddlenode2dof(H_val,par,alpha)
         -sqrt(par(3))*x.^2 + (par(4)/3)*x.^3 + ...
         0.5*par(5)^2*y.^2 + 0.5*par(6)*(y - x).^2 - H_val);
     
-%     esurf = @(x,y,px) (bh ./ (wd).^4) .* y.^2 .* (y.^2 - 2 .* wd.^2) ...
-%         .* exp(-z .* lambda .* x) + D .* (1 - exp(-lambda .* x)).^2 + ...
-%         epsilon_s + (1 ./ (2 .* mu)) .* px.^2  - H_val;
     
 %     rgb_col = [0/255 255/255 0/255];
     lightGrey1   = [0.85 0.85 0.85];

@@ -34,8 +34,8 @@ function fs = draw_energysurf_saddlenode2dof(H_val,par,alpha)
     pxi = -2; pxf = 2;
 %     pxi = -1; pxf = 0.5;
     
-    xi = -2; xf = 10;
-    yi = -2; yf = 10;
+    xi = -2; xf = 7;
+    yi = -2; yf = 7;
     pxi = -5; pxf = 5;
 
 

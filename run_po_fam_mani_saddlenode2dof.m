@@ -23,8 +23,8 @@ MASS_A = 1.0; MASS_B = 1.0; % Mass-weighted momenta
 MU = 4.0;
 OMEGA = 3.0;
 ALPHA = 1.0;
-EPSILON = 1e-20;
-% EPSILON = 5.0;
+% EPSILON = 1e-20;
+EPSILON = 5.0;
 
 
 % MU = 0.1;
@@ -50,8 +50,8 @@ EPSILON = 1e-20;
 % EPSILON = 1.5;
 
 
-n_mfd_traj = 1000;
-% n_mfd_traj = 10;
+% n_mfd_traj = 1000;
+n_mfd_traj = 10;
 % n_mfd_traj = 25;
 
 
@@ -148,6 +148,7 @@ del = 1e-6;
 
 %% Stable manifold, negative branch
 
+% tmfd = 3.5*TPOFam(nMed); % uncoupled
 tmfd = 10.5*TPOFam(nMed);
 % tmfd = 10;
 % deltaE = 0.125;
@@ -177,8 +178,9 @@ grid on
 % tmfd = 12.5*TPOFam(nMed);
 
 stbl = 1; dir = -1;
+% tmfd = 10.5*TPOFam(nMed);
+% tmfd = 3.5*TPOFam(nMed); % uncoupled
 tmfd = 10.5*TPOFam(nMed);
-% tmfd = 2.5*TPOFam(nMed);
 
 
 tic;    

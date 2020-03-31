@@ -1,4 +1,4 @@
-function fs = draw_energysurf_saddlenode2dof(H_val,par,alpha)
+function fs = plot_energysurface(H_val,par,alpha)
 
     % plot properties
     axesFontName = 'factory';
